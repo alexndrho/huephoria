@@ -22,7 +22,7 @@ import {
   signInWithEmailAndPassword,
   signInWithRedirect,
 } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { auth, googleAuthProvider } from '../config/firebase';
 import { FirebaseError } from 'firebase/app';
 
@@ -119,7 +119,7 @@ function Login() {
 
         <Text c="dimmed" size="sm" ta="center" mt={5}>
           Do not have an account yet?{' '}
-          <Anchor size="sm" component="button">
+          <Anchor size="sm" component={Link} to="/signup">
             Create account
           </Anchor>
         </Text>
