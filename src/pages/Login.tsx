@@ -12,21 +12,34 @@ import {
   Center,
   Divider,
 } from '@mantine/core';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from '@mantine/form';
 import { GoogleButton } from '../components/GoogleButton';
 import {
   browserSessionPersistence,
+  onAuthStateChanged,
   setPersistence,
   signInWithEmailAndPassword,
   signInWithRedirect,
 } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 import { auth, googleAuthProvider } from '../config/firebase';
 import { FirebaseError } from 'firebase/app';
 
 function Login() {
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState<string>('');
+
+  useEffect(() => {
+    const unSubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigate('/');
+      }
+    });
+
+    return () => unSubscribe();
+  }, [navigate]);
 
   const form = useForm({
     initialValues: {
