@@ -50,6 +50,7 @@ function Login() {
 
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
+      password: (val) => (val.length > 0 ? null : 'Invalid password'),
     },
   });
 
