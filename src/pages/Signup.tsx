@@ -11,11 +11,12 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from '@mantine/form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   createUserWithEmailAndPassword,
+  onAuthStateChanged,
   signInWithRedirect,
 } from 'firebase/auth';
 import { GoogleButton } from '../components/GoogleButton';
@@ -23,8 +24,19 @@ import { auth, googleAuthProvider } from '../config/firebase';
 import { FirebaseError } from 'firebase/app';
 
 function Signup() {
+  const navigate = useNavigate();
   const [formError, setFormError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const unSubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigate('/');
+      }
+    });
+
+    return () => unSubscribe();
+  }, [navigate]);
 
   const form = useForm({
     initialValues: {
