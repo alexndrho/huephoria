@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { GoogleAuthProvider, getAuth } from 'firebase/auth';
+import { collection, getFirestore } from 'firebase/firestore';
 import { getAnalytics } from 'firebase/analytics';
 
 const firebaseConfig = {
@@ -17,6 +18,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const googleAuthProvider = new GoogleAuthProvider();
+const db = getFirestore(app);
 const analytics = getAnalytics(app);
 
-export { auth, googleAuthProvider, analytics };
+// References
+const usersCollectionRef = collection(db, 'users');
+
+export { auth, googleAuthProvider, db, usersCollectionRef, analytics };
