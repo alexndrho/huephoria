@@ -1,27 +1,15 @@
-import { useEffect, useState } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
 import Login from './pages/Login';
 import AppContainer from './components/AppContainer';
-import { auth } from './config/firebase';
+import { Route, Routes } from 'react-router-dom';
 
 function App() {
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  return (
+    <Routes>
+      <Route path="/login" element={<Login />} />
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsUserLoggedIn(true);
-      } else {
-        setIsUserLoggedIn(false);
-      }
-    });
-  }, []);
-
-  if (!isUserLoggedIn) {
-    return <Login />;
-  }
-
-  return <AppContainer />;
+      <Route path="/" element={<AppContainer />} />
+    </Routes>
+  );
 }
 
 export default App;
