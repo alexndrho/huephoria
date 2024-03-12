@@ -1,8 +1,18 @@
-import { AppShell, Burger, Button, Group, Text } from '@mantine/core';
+import {
+  AppShell,
+  Avatar,
+  Burger,
+  Button,
+  Group,
+  Menu,
+  Text,
+  UnstyledButton,
+} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { signOut } from 'firebase/auth';
 import { Link } from 'react-router-dom';
 import { auth } from '../config/firebase';
+import { TbLogout2, TbSettings } from 'react-icons/tb';
 
 function AppContainer({ children }: { children?: React.ReactNode }) {
   const [opened, { toggle }] = useDisclosure();
@@ -34,13 +44,31 @@ function AppContainer({ children }: { children?: React.ReactNode }) {
 
           {auth.currentUser ? (
             <Group h="100%">
-              <Text c="gray" size="sm">
-                {auth.currentUser.displayName}
-              </Text>
+              <Menu>
+                <Menu.Target>
+                  <UnstyledButton>
+                    <Avatar src={auth.currentUser.photoURL} alt="avatar icon" />
+                  </UnstyledButton>
+                </Menu.Target>
 
-              <Button color="red" onClick={() => signOut(auth)}>
-                Log out
-              </Button>
+                <Menu.Dropdown>
+                  <Menu.Item
+                    component={Link}
+                    to="/settings"
+                    leftSection={<TbSettings />}
+                  >
+                    Settings
+                  </Menu.Item>
+
+                  <Menu.Item
+                    color="red"
+                    leftSection={<TbLogout2 />}
+                    onClick={() => signOut(auth)}
+                  >
+                    Log out
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
             </Group>
           ) : (
             <Group h="100%">
