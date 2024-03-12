@@ -32,6 +32,7 @@ function Signup() {
     const unSubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         navigate('/');
+        setIsLoading(false);
       }
     });
 
@@ -58,8 +59,6 @@ function Signup() {
       setIsLoading(true);
 
       await createUserWithEmailAndPassword(auth, values.email, values.password);
-
-      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
 
@@ -81,8 +80,12 @@ function Signup() {
 
   const handleGoogleSignup = async () => {
     try {
+      setIsLoading(true);
+
       await signInWithRedirect(auth, googleAuthProvider);
     } catch (error) {
+      setIsLoading(false);
+
       if (error instanceof FirebaseError) {
         if (error.code === 'auth/operation-not-allowed') {
           setFormError('Operation not allowed');

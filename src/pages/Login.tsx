@@ -37,6 +37,7 @@ function Login() {
     const unSubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         navigate('/');
+        setIsLoadingEmailAndPassword(false);
       }
     });
 
@@ -65,8 +66,6 @@ function Login() {
       }
 
       await signInWithEmailAndPassword(auth, values.email, values.password);
-
-      setIsLoadingEmailAndPassword(false);
     } catch (error) {
       setIsLoadingEmailAndPassword(false);
 
@@ -102,8 +101,6 @@ function Login() {
       setIsLoadingGoogle(true);
 
       await signInWithRedirect(auth, googleAuthProvider);
-
-      setIsLoadingGoogle(false);
     } catch (error) {
       setIsLoadingGoogle(false);
 
