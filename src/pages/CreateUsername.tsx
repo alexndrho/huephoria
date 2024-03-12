@@ -47,6 +47,7 @@ function CreateUsername() {
       setIsLoading(true);
 
       await createUpdateUsername(auth.currentUser.uid, values.username);
+      navigate('/');
 
       setIsLoading(false);
     } catch (error) {
