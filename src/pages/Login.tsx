@@ -28,8 +28,10 @@ import { FirebaseError } from 'firebase/app';
 
 function Login() {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  const [formError, setFormError] = useState<string>('');
+  const [isLoadingEmailAndPassword, setIsLoadingEmailAndPassword] =
+    useState(false);
+  const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
+  const [formError, setFormError] = useState('');
 
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, (user) => {
@@ -56,7 +58,7 @@ function Login() {
 
   const handleLogin = async (values: typeof form.values) => {
     try {
-      setIsLoading(true);
+      setIsLoadingEmailAndPassword(true);
 
       if (values.remember.valueOf()!) {
         await setPersistence(auth, browserSessionPersistence);
@@ -64,9 +66,9 @@ function Login() {
 
       await signInWithEmailAndPassword(auth, values.email, values.password);
 
-      setIsLoading(false);
+      setIsLoadingEmailAndPassword(false);
     } catch (error) {
-      setIsLoading(false);
+      setIsLoadingEmailAndPassword(false);
 
       if (error instanceof FirebaseError) {
         // email error handling
@@ -97,8 +99,14 @@ function Login() {
 
   const handleGoogleLogin = async () => {
     try {
+      setIsLoadingGoogle(true);
+
       await signInWithRedirect(auth, googleAuthProvider);
+
+      setIsLoadingGoogle(false);
     } catch (error) {
+      setIsLoadingGoogle(false);
+
       if (error instanceof FirebaseError) {
         if (error.code === 'auth/operation-not-allowed') {
           setFormError('Operation not allowed');
@@ -157,14 +165,24 @@ function Login() {
               </Anchor>
             </Group>
 
-            <Button fullWidth mt="xl" type="submit" loading={isLoading}>
+            <Button
+              fullWidth
+              mt="xl"
+              type="submit"
+              loading={isLoadingEmailAndPassword}
+            >
               Log in
             </Button>
 
             <Divider label="or continue with" labelPosition="center" my="lg" />
 
             <Group grow mb="md" mt="md">
-              <GoogleButton onClick={handleGoogleLogin}>Google</GoogleButton>
+              <GoogleButton
+                loading={isLoadingGoogle}
+                onClick={handleGoogleLogin}
+              >
+                Google
+              </GoogleButton>
             </Group>
           </form>
         </Paper>
