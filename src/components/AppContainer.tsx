@@ -9,8 +9,9 @@ import {
   Text,
   UnstyledButton,
 } from '@mantine/core';
+import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
-import { signOut } from 'firebase/auth';
+import { User, onAuthStateChanged, signOut } from 'firebase/auth';
 import { Link, useLocation } from 'react-router-dom';
 import { auth } from '../config/firebase';
 import { TbHome, TbLogout2, TbSettings } from 'react-icons/tb';
@@ -18,6 +19,16 @@ import { TbHome, TbLogout2, TbSettings } from 'react-icons/tb';
 function AppContainer({ children }: { children?: React.ReactNode }) {
   const location = useLocation();
   const [opened, { toggle }] = useDisclosure();
+
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const unSubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+
+    return () => unSubscribe();
+  }, []);
 
   const dataLinks = [
     {
@@ -52,12 +63,12 @@ function AppContainer({ children }: { children?: React.ReactNode }) {
             </Text>
           </Group>
 
-          {auth.currentUser ? (
+          {user ? (
             <Group h="100%">
               <Menu>
                 <Menu.Target>
                   <UnstyledButton>
-                    <Avatar src={auth.currentUser.photoURL} alt="avatar icon" />
+                    <Avatar src={user.photoURL} alt="avatar icon" />
                   </UnstyledButton>
                 </Menu.Target>
 
