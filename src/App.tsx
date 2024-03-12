@@ -14,9 +14,7 @@ function App() {
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        if (await uidExistsWithUsername(user.uid)) {
-          navigate('/');
-        } else {
+        if (!(await uidExistsWithUsername(user.uid))) {
           navigate('/create-username');
         }
       }
