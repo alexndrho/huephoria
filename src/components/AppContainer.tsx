@@ -5,17 +5,27 @@ import {
   Button,
   Group,
   Menu,
+  NavLink,
   Text,
   UnstyledButton,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { signOut } from 'firebase/auth';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { auth } from '../config/firebase';
-import { TbLogout2, TbSettings } from 'react-icons/tb';
+import { TbHome, TbLogout2, TbSettings } from 'react-icons/tb';
 
 function AppContainer({ children }: { children?: React.ReactNode }) {
+  const location = useLocation();
   const [opened, { toggle }] = useDisclosure();
+
+  const dataLinks = [
+    {
+      icon: TbHome,
+      label: 'Home',
+      to: '/',
+    },
+  ];
 
   return (
     <AppShell
@@ -80,7 +90,18 @@ function AppContainer({ children }: { children?: React.ReactNode }) {
         </Group>
       </AppShell.Header>
 
-      <AppShell.Navbar p="md"></AppShell.Navbar>
+      <AppShell.Navbar p="md">
+        {dataLinks.map((link, index) => (
+          <NavLink
+            key={index}
+            component={Link}
+            to={link.to}
+            active={location.pathname === link.to}
+            leftSection={<link.icon />}
+            label={link.label}
+          />
+        ))}
+      </AppShell.Navbar>
 
       <AppShell.Main>{children}</AppShell.Main>
     </AppShell>
