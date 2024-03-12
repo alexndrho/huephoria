@@ -1,21 +1,11 @@
 import { AppShell, Burger, Button, Group, Text } from '@mantine/core';
-import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
-import { User, onAuthStateChanged, signOut } from 'firebase/auth';
+import { signOut } from 'firebase/auth';
 import { Link } from 'react-router-dom';
 import { auth } from '../config/firebase';
 
 function AppContainer({ children }: { children?: React.ReactNode }) {
   const [opened, { toggle }] = useDisclosure();
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
-
-    return () => unSubscribe();
-  }, []);
 
   return (
     <AppShell
@@ -42,10 +32,10 @@ function AppContainer({ children }: { children?: React.ReactNode }) {
             </Text>
           </Group>
 
-          {user ? (
+          {auth.currentUser ? (
             <Group h="100%">
               <Text c="gray" size="sm">
-                {user.displayName}
+                {auth.currentUser.displayName}
               </Text>
 
               <Button color="red" onClick={() => signOut(auth)}>
