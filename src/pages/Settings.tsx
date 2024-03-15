@@ -15,7 +15,7 @@ import {
 } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   User,
   onAuthStateChanged,
@@ -34,6 +34,7 @@ import IUser from '../types/IUser';
 import { TbEdit, TbPhoto, TbTrash, TbX } from 'react-icons/tb';
 
 function Settings({ userData }: { userData: IUser | null }) {
+  const navigate = useNavigate();
   // states
   const [openedChangePass, { open: openChangePass, close: closeChangePass }] =
     useDisclosure();
@@ -78,11 +79,16 @@ function Settings({ userData }: { userData: IUser | null }) {
   // effects
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        navigate('/login');
+        return;
+      }
+
       setUser(user);
     });
 
     return () => unSubscribe();
-  }, []);
+  }, [navigate]);
 
   // functions
   const resetInput = () => {
