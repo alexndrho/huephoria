@@ -4,6 +4,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Home from './pages/Home';
+import Settings from './pages/Settings';
 import CreateUsername from './pages/CreateUsername';
 import NotFound from './pages/NotFound';
 import { auth } from './config/firebase';
@@ -30,6 +31,7 @@ function App() {
       <Route path="/signup" element={<Signup />} />
 
       <Route path="/" element={<Home />} />
+      <Route path="/settings" element={<Settings />} />
       <Route path="/create-username" element={<CreateUsername />} />
 
       <Route path="*" element={<NotFound />} />

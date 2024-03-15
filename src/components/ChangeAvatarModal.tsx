@@ -1,10 +1,10 @@
 import { Avatar, Button, FileInput, Flex, Group, Modal } from '@mantine/core';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { useState } from 'react';
-import { TbPhoto } from 'react-icons/tb';
-import { auth, storage } from '../config/firebase';
-import { updateProfile } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { updateProfile } from 'firebase/auth';
+import { auth, storage } from '../config/firebase';
+import { TbPhoto } from 'react-icons/tb';
 
 function ChangeAvatarModal({
   opened,
