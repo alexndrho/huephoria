@@ -27,13 +27,13 @@ import { FirebaseError } from 'firebase/app';
 import { deleteObject, ref } from 'firebase/storage';
 import ChangeAvatarModal from '../components/ChangeAvatarModal';
 import ChangePasswordModal from '../components/ChangePasswordModal';
-import { createUpdateUsername, getUser } from '../helpers/user';
+import { createUpdateUsername } from '../helpers/user';
 import { auth, storage } from '../config/firebase';
 import UserError from '../errors/UserError';
 import IUser from '../types/IUser';
 import { TbEdit, TbPhoto, TbTrash, TbX } from 'react-icons/tb';
 
-function Settings() {
+function Settings({ userData }: { userData: IUser | null }) {
   // states
   const [openedChangePass, { open: openChangePass, close: closeChangePass }] =
     useDisclosure();
@@ -48,7 +48,6 @@ function Settings() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [userData, setUserData] = useState<IUser | null>(null);
 
   const [displayNameDisabled, setDisplayNameDisabled] = useState(true);
   const [usernameDisabled, setUsernameDisabled] = useState(true);
@@ -80,11 +79,6 @@ function Settings() {
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
-
-      if (!user) return;
-
-      const userData = await getUser(user.uid);
-      setUserData(userData);
     });
 
     return () => unSubscribe();

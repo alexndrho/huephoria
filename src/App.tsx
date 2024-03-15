@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import Login from './pages/Login';
@@ -7,22 +7,38 @@ import Home from './pages/Home';
 import Settings from './pages/Settings';
 import CreateUsername from './pages/CreateUsername';
 import NotFound from './pages/NotFound';
-import { auth } from './config/firebase';
+import { auth, usersCollectionRef } from './config/firebase';
 import { uidExistsWithUsername } from './helpers/user';
+import { limit, onSnapshot, query, where } from 'firebase/firestore';
+import IUser from './types/IUser';
 
 function App() {
   const navigate = useNavigate();
+  const [userData, setUserData] = useState<IUser | null>(null);
 
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        if (!(await uidExistsWithUsername(user.uid))) {
-          navigate('/create-username');
-        }
+    const unSubscribeAuth = onAuthStateChanged(auth, async (user) => {
+      if (!user) return;
+
+      if (!(await uidExistsWithUsername(user.uid))) {
+        navigate('/create-username');
       }
+
+      const q = query(
+        usersCollectionRef,
+        where('uid', '==', user.uid),
+        limit(1)
+      );
+      const unSubscribeSnapshot = onSnapshot(q, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          setUserData(doc.data() as IUser);
+        });
+      });
+
+      return () => unSubscribeSnapshot();
     });
 
-    return () => unSubscribe();
+    return () => unSubscribeAuth();
   }, [navigate]);
 
   return (
@@ -31,7 +47,7 @@ function App() {
       <Route path="/signup" element={<Signup />} />
 
       <Route path="/" element={<Home />} />
-      <Route path="/settings" element={<Settings />} />
+      <Route path="/settings" element={<Settings userData={userData} />} />
       <Route path="/create-username" element={<CreateUsername />} />
 
       <Route path="*" element={<NotFound />} />
