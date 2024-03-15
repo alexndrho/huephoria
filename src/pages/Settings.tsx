@@ -1,6 +1,7 @@
 import {
   ActionIcon,
   Avatar,
+  Box,
   Button,
   Container,
   Flex,
@@ -234,116 +235,112 @@ function Settings({ userData }: { userData: IUser | null }) {
         </Group>
       </Modal>
 
-      <form onSubmit={form.onSubmit((val) => handleSaveChanges(val))}>
-        <Group mb="xl" justify="space-between">
-          <Title>Settings</Title>
+      <Group mb={50} justify="space-between">
+        <Title>Settings</Title>
 
-          <Tooltip label="Close">
-            <ActionIcon
-              component={Link}
-              to="/"
-              size="xl"
-              color="gray"
-              variant="subtle"
-              aria-label="close"
-            >
-              <TbX fontSize="1.75rem" />
-            </ActionIcon>
-          </Tooltip>
-        </Group>
-
-        <Flex direction={{ base: 'column', sm: 'row' }}>
-          <Flex
-            w={{ base: '100%', sm: '500' }}
-            mb={{ base: 'lg', sm: 0 }}
-            direction="column"
-            justify="center"
-            align="center"
+        <Tooltip label="Close">
+          <ActionIcon
+            component={Link}
+            to="/"
+            size="xl"
+            color="gray"
+            variant="subtle"
+            aria-label="close"
           >
-            <Title order={2} mb="md" ta="center" lineClamp={1}>
-              {user?.displayName}
-            </Title>
+            <TbX fontSize="1.75rem" />
+          </ActionIcon>
+        </Tooltip>
+      </Group>
 
-            <Avatar src={user?.photoURL} alt="user icon" mb="md" size={200} />
+      <Flex direction={{ base: 'column', sm: 'row' }}>
+        <Flex
+          mr="lg"
+          w={{ base: '100%', sm: '350' }}
+          mb={{ base: 'lg', sm: 0 }}
+          direction="column"
+          align="center"
+        >
+          <Title order={2} mb="md" ta="center" lineClamp={1}>
+            {user?.displayName}
+          </Title>
 
-            <Menu>
-              <Menu.Target>
-                <Button variant="default" leftSection={<TbEdit />}>
-                  Edit
-                </Button>
-              </Menu.Target>
+          <Avatar src={user?.photoURL} alt="user icon" mb="md" size={200} />
 
-              <Menu.Dropdown>
-                <Menu.Item leftSection={<TbPhoto />} onClick={openChangeAvatar}>
-                  Upload an avatar
-                </Menu.Item>
+          <Menu>
+            <Menu.Target>
+              <Button variant="default" leftSection={<TbEdit />}>
+                Edit
+              </Button>
+            </Menu.Target>
 
-                <Menu.Item
-                  leftSection={<TbTrash />}
-                  color="red"
-                  onClick={openDeleteAvatar}
-                >
-                  Remove avatar
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
+            <Menu.Dropdown>
+              <Menu.Item leftSection={<TbPhoto />} onClick={openChangeAvatar}>
+                Upload an avatar
+              </Menu.Item>
 
-            {avatarError && (
-              <Text mt="xs" size="xs" c="red.8">
-                {avatarError}
-              </Text>
-            )}
-          </Flex>
+              <Menu.Item
+                leftSection={<TbTrash />}
+                color="red"
+                onClick={openDeleteAvatar}
+              >
+                Remove avatar
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
 
-          <Paper
-            ml={{ base: 0, sm: 'lg' }}
-            w="100%"
-            shadow="xs"
-            p="lg"
-            withBorder
-          >
-            <Flex direction="column" gap="md">
-              {textInputData.map((data, index) => (
-                <TextInput
-                  key={index}
-                  rightSection={
-                    <ActionIcon
-                      variant="default"
-                      onClick={() => data.setEditable(!data.editable)}
-                    >
-                      <TbEdit />
-                    </ActionIcon>
-                  }
-                  style={{ flexGrow: 1 }}
-                  label={data.label}
-                  placeholder={data.placeholder}
-                  disabled={data.editable}
-                  {...form.getInputProps(data.inputField)}
-                  value={data.value}
-                />
-              ))}
-
-              {formError && (
-                <Text size="xs" c="red.8">
-                  {formError}
-                </Text>
-              )}
-
-              <Group mt="xs">
-                <Button variant="outline" onClick={openChangePass}>
-                  Change Password
-                </Button>
-              </Group>
-            </Flex>
-          </Paper>
+          {avatarError && (
+            <Text mt="xs" size="xs" c="red.8">
+              {avatarError}
+            </Text>
+          )}
         </Flex>
 
-        <Group mt="xl" justify="end">
-          <Button type="submit" loading={isLoading}>
-            Save Changes
-          </Button>
-        </Group>
-      </form>
+        <Box style={{ flexGrow: 1 }}>
+          <form onSubmit={form.onSubmit((val) => handleSaveChanges(val))}>
+            <Paper shadow="xs" p="lg" withBorder>
+              <Flex direction="column" gap="md">
+                {textInputData.map((data, index) => (
+                  <TextInput
+                    key={index}
+                    rightSection={
+                      <ActionIcon
+                        variant="default"
+                        onClick={() => data.setEditable(!data.editable)}
+                      >
+                        <TbEdit />
+                      </ActionIcon>
+                    }
+                    style={{ flexGrow: 1 }}
+                    label={data.label}
+                    placeholder={data.placeholder}
+                    disabled={data.editable}
+                    {...form.getInputProps(data.inputField)}
+                    value={data.value}
+                  />
+                ))}
+
+                {formError && (
+                  <Text size="xs" c="red.8">
+                    {formError}
+                  </Text>
+                )}
+
+                <Group mt="xs">
+                  <Button variant="default" onClick={openChangePass}>
+                    Change Password
+                  </Button>
+                </Group>
+              </Flex>
+            </Paper>
+
+            <Group mt="xl" justify="end">
+              <Button type="submit" loading={isLoading}>
+                Save Changes
+              </Button>
+            </Group>
+          </form>
+        </Box>
+      </Flex>
     </Container>
   );
 }
