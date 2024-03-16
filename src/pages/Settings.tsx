@@ -26,6 +26,7 @@ import {
 import { useForm } from '@mantine/form';
 import { FirebaseError } from 'firebase/app';
 import { deleteObject, ref } from 'firebase/storage';
+import EmailVerificationPaper from '../components/EmailVerificationPaper';
 import ChangeAvatarModal from '../components/ChangeAvatarModal';
 import ChangePasswordModal from '../components/ChangePasswordModal';
 import { createUpdateUsername } from '../helpers/user';
@@ -304,6 +305,8 @@ function Settings({ userData }: { userData: IUser | null }) {
         </Flex>
 
         <Box style={{ flexGrow: 1 }}>
+          <EmailVerificationPaper />
+
           <form onSubmit={form.onSubmit((val) => handleSaveChanges(val))}>
             <Paper shadow="xs" p="lg" withBorder>
               <Flex direction="column" gap="md">
