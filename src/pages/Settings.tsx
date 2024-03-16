@@ -49,6 +49,7 @@ function Settings({ userData }: { userData: IUser | null }) {
   ] = useDisclosure();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingDeleteAvatar, setIsLoadingDeleteAvatar] = useState(false);
   const [user, setUser] = useState<User | null>(null);
 
   const [displayNameDisabled, setDisplayNameDisabled] = useState(true);
@@ -103,6 +104,7 @@ function Settings({ userData }: { userData: IUser | null }) {
   const deleteAvatar = async () => {
     try {
       if (!user) return;
+      setIsLoadingDeleteAvatar(true);
 
       const avatarsStorageRef = ref(storage, `avatars/${user.uid}`);
 
@@ -112,8 +114,10 @@ function Settings({ userData }: { userData: IUser | null }) {
         photoURL: '',
       });
 
+      setIsLoadingDeleteAvatar(false);
       closeDeleteAvatar();
     } catch (error) {
+      setIsLoadingDeleteAvatar(false);
       setAvatarError('Something went wrong');
     }
   };
@@ -229,7 +233,11 @@ function Settings({ userData }: { userData: IUser | null }) {
             Cancel
           </Button>
 
-          <Button color="red" onClick={deleteAvatar}>
+          <Button
+            color="red"
+            onClick={deleteAvatar}
+            loading={isLoadingDeleteAvatar}
+          >
             Remove
           </Button>
         </Group>
