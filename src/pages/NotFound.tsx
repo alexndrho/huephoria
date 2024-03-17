@@ -13,7 +13,7 @@ function NotFound() {
   return (
     <Container>
       <Flex direction="column" justify="center" align="center" h="100vh">
-        <Box w={500}>
+        <Box maw={500}>
           <Title component="p" mb="lg" ta="center">
             404
           </Title>
