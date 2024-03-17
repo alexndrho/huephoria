@@ -6,15 +6,17 @@ import { updateProfile } from 'firebase/auth';
 import { auth, storage } from '../config/firebase';
 import { TbPhoto } from 'react-icons/tb';
 
+interface ChangeAvatarModalProps {
+  opened: boolean;
+  onClose: () => void;
+  photoURL: string;
+}
+
 function ChangeAvatarModal({
   opened,
   onClose,
   photoURL,
-}: {
-  opened: boolean;
-  onClose: () => void;
-  photoURL: string;
-}) {
+}: ChangeAvatarModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [avatarInput, setAvatarInput] = useState<File | null>(null);
   const [avatarInputError, setAvatarInputError] = useState('');
@@ -124,3 +126,4 @@ function ChangeAvatarModal({
 }
 
 export default ChangeAvatarModal;
+export type { ChangeAvatarModalProps };

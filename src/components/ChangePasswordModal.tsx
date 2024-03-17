@@ -5,13 +5,12 @@ import { updatePassword } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import { FirebaseError } from 'firebase/app';
 
-function ChangePasswordModal({
-  opened,
-  onClose,
-}: {
+interface ChangePasswordModalProps {
   opened: boolean;
   onClose: () => void;
-}) {
+}
+
+function ChangePasswordModal({ opened, onClose }: ChangePasswordModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState('');
 
@@ -111,3 +110,4 @@ function ChangePasswordModal({
 }
 
 export default ChangePasswordModal;
+export type { ChangePasswordModalProps };

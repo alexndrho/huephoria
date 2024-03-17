@@ -16,7 +16,11 @@ import { Link, useLocation } from 'react-router-dom';
 import { auth } from '../config/firebase';
 import { TbHome, TbLogout2, TbSettings } from 'react-icons/tb';
 
-function AppContainer({ children }: { children?: React.ReactNode }) {
+interface AppContainerProps {
+  children?: React.ReactNode;
+}
+
+function AppContainer({ children }: AppContainerProps) {
   const location = useLocation();
   const [opened, { toggle }] = useDisclosure();
 
@@ -120,3 +124,4 @@ function AppContainer({ children }: { children?: React.ReactNode }) {
 }
 
 export default AppContainer;
+export type { AppContainerProps };

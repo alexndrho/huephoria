@@ -35,7 +35,11 @@ import UserError from '../errors/UserError';
 import IUser from '../types/IUser';
 import { TbEdit, TbPhoto, TbTrash, TbX } from 'react-icons/tb';
 
-function Settings({ userData }: { userData: IUser | null }) {
+interface SettingsProps {
+  userData: IUser | null;
+}
+
+function Settings({ userData }: SettingsProps) {
   const navigate = useNavigate();
   // states
   const [openedChangePass, { open: openChangePass, close: closeChangePass }] =
@@ -357,3 +361,4 @@ function Settings({ userData }: { userData: IUser | null }) {
 }
 
 export default Settings;
+export type { SettingsProps };
