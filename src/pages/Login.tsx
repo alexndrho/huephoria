@@ -157,7 +157,7 @@ function Login() {
                 {...form.getInputProps('remember')}
               />
 
-              <Anchor component="button" size="sm">
+              <Anchor component={Link} to="/forgot-password" size="sm">
                 Forgot password?
               </Anchor>
             </Group>
