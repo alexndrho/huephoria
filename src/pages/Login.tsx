@@ -61,7 +61,7 @@ function Login() {
     try {
       setIsLoadingEmailAndPassword(true);
 
-      if (values.remember.valueOf()!) {
+      if (!values.remember.valueOf()) {
         await setPersistence(auth, browserSessionPersistence);
       }
 
@@ -154,7 +154,7 @@ function Login() {
             <Group justify="space-between" mt="lg">
               <Checkbox
                 label="Remember me"
-                {...form.getInputProps('remember')}
+                {...form.getInputProps('remember', { type: 'checkbox' })}
               />
 
               <Anchor component={Link} to="/forgot-password" size="sm">
