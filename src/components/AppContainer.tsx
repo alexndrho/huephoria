@@ -14,7 +14,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { User, onAuthStateChanged, signOut } from 'firebase/auth';
 import { Link, useLocation } from 'react-router-dom';
 import { auth } from '../config/firebase';
-import { TbLogout2, TbSettings } from 'react-icons/tb';
+import { TbLogout, TbSettings } from 'react-icons/tb';
 import NavLinkIcon from './NavLinkIcon';
 import classes from '../styles/AppContainer.module.css';
 import { PiHouse, PiHouseFill } from 'react-icons/pi';
@@ -85,7 +85,7 @@ function AppContainer({ children }: AppContainerProps) {
 
                   <Menu.Item
                     color="red"
-                    leftSection={<TbLogout2 />}
+                    leftSection={<TbLogout />}
                     onClick={() => signOut(auth)}
                   >
                     Log out
