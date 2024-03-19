@@ -1,11 +1,11 @@
 import {
+  Affix,
   AppShell,
   Avatar,
-  Burger,
   Button,
+  Flex,
   Group,
   Menu,
-  NavLink,
   Text,
   UnstyledButton,
 } from '@mantine/core';
@@ -14,7 +14,10 @@ import { useDisclosure } from '@mantine/hooks';
 import { User, onAuthStateChanged, signOut } from 'firebase/auth';
 import { Link, useLocation } from 'react-router-dom';
 import { auth } from '../config/firebase';
-import { TbHome, TbLogout2, TbSettings } from 'react-icons/tb';
+import { TbLogout2, TbSettings } from 'react-icons/tb';
+import NavLinkIcon from './NavLinkIcon';
+import classes from '../styles/AppContainer.module.css';
+import { PiHouse, PiHouseFill } from 'react-icons/pi';
 
 interface AppContainerProps {
   children?: React.ReactNode;
@@ -22,7 +25,7 @@ interface AppContainerProps {
 
 function AppContainer({ children }: AppContainerProps) {
   const location = useLocation();
-  const [opened, { toggle }] = useDisclosure();
+  const [opened] = useDisclosure();
 
   const [user, setUser] = useState<User | null>(null);
 
@@ -36,7 +39,8 @@ function AppContainer({ children }: AppContainerProps) {
 
   const dataLinks = [
     {
-      icon: TbHome,
+      icon: PiHouse,
+      iconActive: PiHouseFill,
       label: 'Home',
       to: '/',
     },
@@ -46,22 +50,16 @@ function AppContainer({ children }: AppContainerProps) {
     <AppShell
       header={{ height: 60 }}
       navbar={{
-        width: 300,
+        width: '75',
         breakpoint: 'sm',
         collapsed: { mobile: !opened },
       }}
       padding="md"
+      transitionDuration={0}
     >
       <AppShell.Header>
         <Group h="100%" px="md" justify="space-between">
           <Group h="100%">
-            <Burger
-              opened={opened}
-              onClick={toggle}
-              hiddenFrom="sm"
-              size="sm"
-            />
-
             <Text c="green" fw="bold" size="xl">
               Huephoria
             </Text>
@@ -105,20 +103,47 @@ function AppContainer({ children }: AppContainerProps) {
         </Group>
       </AppShell.Header>
 
-      <AppShell.Navbar p="md">
-        {dataLinks.map((link, index) => (
-          <NavLink
-            key={index}
-            component={Link}
-            to={link.to}
-            active={location.pathname === link.to}
-            leftSection={<link.icon />}
-            label={link.label}
-          />
-        ))}
+      <AppShell.Navbar p="sm">
+        <Flex h="100%" direction="column" justify="center">
+          {dataLinks.map((link, index) => (
+            <NavLinkIcon
+              key={index}
+              icon={link.icon}
+              activeIcon={link.iconActive}
+              label={link.label}
+              labelPosition={'right'}
+              to={link.to}
+              active={location.pathname === link.to}
+            />
+          ))}
+        </Flex>
       </AppShell.Navbar>
 
       <AppShell.Main>{children}</AppShell.Main>
+
+      <Affix
+        display={{ sm: 'none' }}
+        className={classes.navBottom}
+        w="100%"
+        p="sm"
+      >
+        <Group justify="space-around" grow>
+          {dataLinks.map((link, index) => (
+            <Flex justify="center" align="center">
+              <NavLinkIcon
+                key={index}
+                icon={link.icon}
+                activeIcon={link.iconActive}
+                label={link.label}
+                labelPosition={'top'}
+                to={link.to}
+                active={location.pathname === link.to}
+                visibleLabel
+              />
+            </Flex>
+          ))}
+        </Group>
+      </Affix>
     </AppShell>
   );
 }
