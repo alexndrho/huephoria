@@ -309,7 +309,7 @@ function Settings({ userData }: SettingsProps) {
         </Flex>
 
         <Box style={{ flexGrow: 1 }}>
-          <EmailVerificationPaper />
+          {!user?.emailVerified && <EmailVerificationPaper />}
 
           <form onSubmit={form.onSubmit((val) => handleSaveChanges(val))}>
             <Paper shadow="xs" p="lg" withBorder>
