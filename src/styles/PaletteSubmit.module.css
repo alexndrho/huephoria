@@ -1,0 +1,8 @@
+.form__formFieldsContainer {
+  flex: 1;
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    flex: 0;
+    width: 100%;
+  }
+}

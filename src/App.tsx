@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ForgotPassword from './pages/ForgotPassword';
 import Home from './pages/Home';
+import PaletteSubmit from './pages/PaletteSubmit';
 import Settings from './pages/Settings';
 import CreateUsername from './pages/CreateUsername';
 import NotFound from './pages/NotFound';
@@ -47,6 +48,10 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+
+      <Route path="/palette">
+        <Route path="submit" element={<PaletteSubmit />} />
+      </Route>
 
       <Route path="/" element={<Home />} />
       <Route path="/settings" element={<Settings userData={userData} />} />

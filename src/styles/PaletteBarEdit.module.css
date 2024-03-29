@@ -1,0 +1,20 @@
+.paletteBar {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--mantine-radius-xl);
+  overflow: hidden;
+}
+
+.paletteBar--error {
+  border: rem(2px) solid var(--mantine-color-error);
+}
+
+.paletteBar__bar {
+  flex: 1;
+}
+
+.paletteBar__bar--add {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

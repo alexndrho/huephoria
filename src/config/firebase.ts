@@ -25,5 +25,14 @@ const analytics = getAnalytics(app);
 
 // References
 const usersCollectionRef = collection(db, 'users');
+const palettesCollectionRef = collection(db, 'palettes');
 
-export { auth, googleAuthProvider, db, storage, usersCollectionRef, analytics };
+export {
+  auth,
+  googleAuthProvider,
+  db,
+  storage,
+  usersCollectionRef,
+  palettesCollectionRef,
+  analytics,
+};
