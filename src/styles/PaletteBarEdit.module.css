@@ -10,6 +10,7 @@
 }
 
 .paletteBar__bar {
+  width: 100%;
   flex: 1;
 }
 

@@ -71,8 +71,6 @@ function PaletteBarEdit({
             <Flex
               key={index}
               className={classes.paletteBar__bar}
-              w="100%"
-              h="100%"
               bg={color}
               c="red.8"
               justify="end"
