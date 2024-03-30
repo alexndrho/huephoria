@@ -129,9 +129,8 @@ function AppContainer({ children }: AppContainerProps) {
       >
         <Group justify="space-around" grow>
           {dataLinks.map((link, index) => (
-            <Flex justify="center" align="center">
+            <Flex key={index} justify="center" align="center">
               <NavLinkIcon
-                key={index}
                 icon={link.icon}
                 activeIcon={link.iconActive}
                 label={link.label}
