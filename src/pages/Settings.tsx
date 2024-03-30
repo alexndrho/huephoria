@@ -16,7 +16,7 @@ import {
 } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
-import { Link, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   User,
   onAuthStateChanged,
@@ -40,6 +40,7 @@ interface SettingsProps {
 }
 
 function Settings({ userData }: SettingsProps) {
+  const location = useLocation();
   const navigate = useNavigate();
   // states
   const [openedChangePass, { open: openChangePass, close: closeChangePass }] =
@@ -253,12 +254,17 @@ function Settings({ userData }: SettingsProps) {
 
         <Tooltip label="Close">
           <ActionIcon
-            component={Link}
-            to="/"
             size="xl"
             color="gray"
             variant="subtle"
             aria-label="close"
+            onClick={() => {
+              if (location.key === 'default') {
+                navigate('/', { replace: true });
+              } else {
+                navigate(-1);
+              }
+            }}
           >
             <TbX fontSize="1.75rem" />
           </ActionIcon>

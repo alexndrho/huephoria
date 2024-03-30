@@ -15,7 +15,7 @@ import {
 } from '@mantine/core';
 import { useState } from 'react';
 import { useForm } from '@mantine/form';
-import { Link } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { addDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, palettesCollectionRef } from '../config/firebase';
 import PaletteBarEdit from '../components/PaletteBarEdit';
@@ -32,6 +32,9 @@ interface FormValues {
 }
 
 function PaletteSubmit() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>('');
 
@@ -80,12 +83,17 @@ function PaletteSubmit() {
 
         <Tooltip label="Close">
           <ActionIcon
-            component={Link}
-            to="/"
             size="xl"
             color="gray"
             variant="subtle"
             aria-label="close"
+            onClick={() => {
+              if (location.key === 'default') {
+                navigate('/', { replace: true });
+              } else {
+                navigate(-1);
+              }
+            }}
           >
             <TbX fontSize="1.75rem" />
           </ActionIcon>
