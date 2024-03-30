@@ -61,13 +61,14 @@ function PaletteSubmit() {
     try {
       setIsLoading(true);
 
-      await addDoc(palettesCollectionRef, {
+      const doc = await addDoc(palettesCollectionRef, {
         ...values,
         uid: auth.currentUser.uid,
         createdAt: serverTimestamp(),
       });
 
       setIsLoading(false);
+      navigate(`/palette/${doc.id}`);
     } catch (error) {
       setIsLoading(false);
 
