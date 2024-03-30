@@ -17,11 +17,10 @@ import { useState } from 'react';
 import { useForm } from '@mantine/form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { addDoc, serverTimestamp } from 'firebase/firestore';
-import { auth, palettesCollectionRef } from '../config/firebase';
 import PaletteBarEdit from '../components/PaletteBarEdit';
-import IPalettePost from '../types/IPalettePost';
-import classes from '../styles/PaletteSubmit.module.css';
+import { auth, palettesCollectionRef } from '../config/firebase';
 import { TbX } from 'react-icons/tb';
+import classes from '../styles/PaletteSubmit.module.css';
 
 interface FormValues {
   title: string;
@@ -66,7 +65,7 @@ function PaletteSubmit() {
         ...values,
         uid: auth.currentUser.uid,
         createdAt: serverTimestamp(),
-      } satisfies Omit<IPalettePost, 'id'>);
+      });
 
       setIsLoading(false);
     } catch (error) {

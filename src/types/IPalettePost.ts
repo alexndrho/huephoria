@@ -7,7 +7,7 @@ interface IPalettePost {
   description: string;
   colors: string[];
   tags: string[];
-  createdAt: firebase.firestore.FieldValue;
+  createdAt: firebase.firestore.Timestamp;
 }
 
 export default IPalettePost;
