@@ -124,6 +124,7 @@ function AppContainer({ children }: AppContainerProps) {
       <Affix
         display={{ sm: 'none' }}
         className={classes.navBottom}
+        bg="dark.7"
         w="100%"
         p="sm"
       >
