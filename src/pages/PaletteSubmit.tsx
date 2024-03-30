@@ -13,9 +13,10 @@ import {
   Title,
   Tooltip,
 } from '@mantine/core';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from '@mantine/form';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { onAuthStateChanged } from 'firebase/auth';
 import { addDoc, serverTimestamp } from 'firebase/firestore';
 import PaletteBarEdit from '../components/PaletteBarEdit';
 import { auth, palettesCollectionRef } from '../config/firebase';
@@ -36,6 +37,16 @@ function PaletteSubmit() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>('');
+
+  useEffect(() => {
+    const unSubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        navigate('/login');
+      }
+    });
+
+    return () => unSubscribe();
+  }, [navigate]);
 
   const form = useForm<FormValues>({
     initialValues: {
