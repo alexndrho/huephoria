@@ -19,8 +19,8 @@ function PaletteBar({ w, h, palette }: PaletteBarProps) {
   return (
     <AspectRatio w={w} h={h} ratio={9 / 12}>
       <Box className={classes.paletteBar}>
-        {palette.map((color, index) => (
-          <CopyButton key={index} value={color} timeout={2000}>
+        {palette.map((color) => (
+          <CopyButton key={crypto.randomUUID()} value={color} timeout={2000}>
             {({ copied, copy }) => (
               <UnstyledButton
                 className={classes.paletteBar__bar}

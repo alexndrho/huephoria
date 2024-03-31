@@ -105,9 +105,9 @@ function AppContainer({ children }: AppContainerProps) {
 
       <AppShell.Navbar p="sm">
         <Flex h="100%" direction="column" justify="center">
-          {dataLinks.map((link, index) => (
+          {dataLinks.map((link) => (
             <NavLinkIcon
-              key={index}
+              key={crypto.randomUUID()}
               icon={link.icon}
               activeIcon={link.iconActive}
               label={link.label}
@@ -129,8 +129,8 @@ function AppContainer({ children }: AppContainerProps) {
         p="sm"
       >
         <Group justify="space-around" grow>
-          {dataLinks.map((link, index) => (
-            <Flex key={index} justify="center" align="center">
+          {dataLinks.map((link) => (
+            <Flex key={crypto.randomUUID()} justify="center" align="center">
               <NavLinkIcon
                 icon={link.icon}
                 activeIcon={link.iconActive}

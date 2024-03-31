@@ -115,8 +115,8 @@ function PalettePost() {
                   </Table.Thead>
 
                   <Table.Tbody>
-                    {palettePost.colors.map((color, index) => (
-                      <Table.Tr key={index}>
+                    {palettePost.colors.map((color) => (
+                      <Table.Tr key={crypto.randomUUID()}>
                         <Table.Td>
                           <ColorSwatch color={color} />
                         </Table.Td>
@@ -135,8 +135,8 @@ function PalettePost() {
 
             <Group mt="lg" justify="center">
               <Group justify="space-between">
-                {palettePost.tags.map((tag, index) => (
-                  <Badge size="lg" color="gray" key={index}>
+                {palettePost.tags.map((tag) => (
+                  <Badge size="lg" color="gray" key={crypto.randomUUID()}>
                     {tag}
                   </Badge>
                 ))}

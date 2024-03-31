@@ -69,7 +69,7 @@ function PaletteBarEdit({
         >
           {palette.map((color, index) => (
             <Flex
-              key={index}
+              key={crypto.randomUUID()}
               className={classes.paletteBar__bar}
               bg={color}
               c="red.8"
