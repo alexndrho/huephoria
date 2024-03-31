@@ -1,0 +1,29 @@
+.paletteBar {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--mantine-radius-lg);
+  overflow: hidden;
+}
+
+.paletteBar__bar {
+  width: 100%;
+  flex: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  transition: flex 100ms ease;
+}
+
+.paletteBar__bar:hover {
+  flex: 3;
+}
+
+.paletteBar__bar * {
+  display: none;
+}
+
+.paletteBar__bar:hover * {
+  display: block;
+}

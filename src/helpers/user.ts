@@ -10,6 +10,25 @@ import { usersCollectionRef } from '../config/firebase';
 import UserError from '../errors/UserError';
 import IUser from '../types/IUser';
 
+async function getUserName(uid: string): Promise<string> {
+  let username = '';
+
+  const q = query(usersCollectionRef, where('uid', '==', uid), limit(1));
+
+  const querySnapshot = await getDocs(q);
+  const doc = querySnapshot.docs[0];
+
+  if (!doc || !doc.exists()) return username;
+
+  const userData = doc.data() as IUser;
+
+  if (userData.username) {
+    username = userData.username;
+  }
+
+  return username;
+}
+
 async function usernameExists(username: string): Promise<boolean> {
   let exists = false;
 
@@ -74,4 +93,9 @@ async function createUpdateUsername(
   });
 }
 
-export { usernameExists, uidExistsWithUsername, createUpdateUsername };
+export {
+  getUserName,
+  usernameExists,
+  uidExistsWithUsername,
+  createUpdateUsername,
+};
