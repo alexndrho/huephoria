@@ -10,4 +10,9 @@ interface IPalettePost {
   createdAt: firebase.firestore.Timestamp;
 }
 
+interface IPalettePostWithUsername extends IPalettePost {
+  username: string;
+}
+
 export default IPalettePost;
+export type { IPalettePostWithUsername };
