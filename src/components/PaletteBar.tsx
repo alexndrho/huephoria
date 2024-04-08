@@ -1,7 +1,7 @@
 import {
   AspectRatio,
-  AspectRatioProps,
   Box,
+  BoxProps,
   CopyButton,
   Text,
   UnstyledButton,
@@ -9,15 +9,13 @@ import {
 } from '@mantine/core';
 import classes from '../styles/PaletteBar.module.css';
 
-interface PaletteBarProps {
-  w?: AspectRatioProps['w'];
-  h?: AspectRatioProps['h'];
+interface PaletteBarProps extends BoxProps {
   palette: string[];
 }
 
-function PaletteBar({ w, h, palette }: PaletteBarProps) {
+function PaletteBar({ palette, ...props }: PaletteBarProps) {
   return (
-    <AspectRatio w={w} h={h} ratio={9 / 12}>
+    <AspectRatio ratio={9 / 12} {...props}>
       <Box className={classes.paletteBar}>
         {palette.map((color) => (
           <CopyButton key={crypto.randomUUID()} value={color} timeout={2000}>
