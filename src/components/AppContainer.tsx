@@ -121,7 +121,7 @@ function AppContainer({ children }: AppContainerProps) {
       </AppShell.Navbar>
 
       <AppShell.Main>
-        <Container size="lg" py="lg">
+        <Container size="lg" py="lg" pb={100}>
           {children}
         </Container>
       </AppShell.Main>
