@@ -7,6 +7,8 @@ import {
   UnstyledButton,
   isLightColor,
 } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import { FaCheck } from 'react-icons/fa6';
 import classes from '../styles/PaletteBar.module.css';
 
 interface PaletteBarProps extends BoxProps {
@@ -23,7 +25,15 @@ function PaletteBar({ palette, ...props }: PaletteBarProps) {
               <UnstyledButton
                 className={classes.paletteBar__bar}
                 bg={color}
-                onClick={copy}
+                onClick={() => {
+                  copy();
+                  notifications.show({
+                    icon: <FaCheck />,
+                    title: 'Color copied',
+                    message: color,
+                    color: color,
+                  });
+                }}
               >
                 <Text
                   size="xl"
