@@ -5,16 +5,15 @@ import {
   TooltipProps,
   UnstyledButton,
 } from '@mantine/core';
-import { Link } from 'react-router-dom';
+import { Link, LinkProps } from 'react-router-dom';
 import { IconType } from 'react-icons';
 import classes from '../styles/NavLinkIcon.module.css';
 
-interface NavLinkIconProps {
+interface NavLinkIconProps extends LinkProps {
   icon: IconType;
   activeIcon: IconType;
   label: string;
   labelPosition?: TooltipProps['position'];
-  to: string;
   active?: boolean;
   visibleLabel?: boolean;
 }
@@ -27,6 +26,7 @@ function NavLinkIcon({
   to,
   active,
   visibleLabel,
+  ...props
 }: NavLinkIconProps) {
   const ResultIcon = active ? (
     <ActiveIcon fontSize="1.75rem" />
@@ -35,7 +35,7 @@ function NavLinkIcon({
   );
 
   return visibleLabel ? (
-    <UnstyledButton w={50} h={50} component={Link} to={to}>
+    <UnstyledButton w={50} h={50} component={Link} to={to} {...props}>
       <Flex c={active ? 'green' : ''} direction="column" align="center">
         {ResultIcon}
         <Text size="xs" lineClamp={1}>
@@ -50,6 +50,7 @@ function NavLinkIcon({
         component={Link}
         to={to}
         data-active={active || undefined}
+        {...props}
       >
         {ResultIcon}
       </UnstyledButton>
