@@ -6,6 +6,7 @@ interface IPalettePost {
   title: string;
   author: string;
   description: string;
+  isCreator: boolean;
   colors: string[];
   tags: string[];
   // likes: number;
