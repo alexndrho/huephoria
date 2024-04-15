@@ -115,6 +115,7 @@ function AppContainer({ children }: AppContainerProps) {
               labelPosition={'right'}
               to={link.to}
               active={location.pathname === link.to}
+              reloadDocument={location.pathname === link.to}
             />
           ))}
         </Flex>
@@ -144,6 +145,7 @@ function AppContainer({ children }: AppContainerProps) {
                 to={link.to}
                 active={location.pathname === link.to}
                 visibleLabel
+                reloadDocument={location.pathname === link.to}
               />
             </Flex>
           ))}
