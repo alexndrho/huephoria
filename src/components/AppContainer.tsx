@@ -3,6 +3,7 @@ import {
   AppShell,
   Avatar,
   Button,
+  Container,
   Flex,
   Group,
   Menu,
@@ -119,7 +120,11 @@ function AppContainer({ children }: AppContainerProps) {
         </Flex>
       </AppShell.Navbar>
 
-      <AppShell.Main>{children}</AppShell.Main>
+      <AppShell.Main>
+        <Container size="lg" py="lg">
+          {children}
+        </Container>
+      </AppShell.Main>
 
       <Affix
         display={{ sm: 'none' }}
