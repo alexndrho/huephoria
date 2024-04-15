@@ -61,7 +61,14 @@ function AppContainer({ children }: AppContainerProps) {
       <AppShell.Header>
         <Group h="100%" px="md" justify="space-between">
           <Group h="100%">
-            <Text c="green" fw="bold" size="xl">
+            <Text
+              component={Link}
+              to="/"
+              reloadDocument
+              c="green"
+              fw="bold"
+              size="xl"
+            >
               Huephoria
             </Text>
           </Group>
