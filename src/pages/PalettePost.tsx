@@ -21,7 +21,7 @@ import {
 } from '@mantine/core';
 import { formatDistanceToNow } from 'date-fns';
 import NotFoundWithContainer from './NotFoundWithContainer';
-import { getUserName } from '../helpers/user';
+import { getUserName } from '../services/user';
 import { hexToRgb } from '../helpers/color';
 import { TbX } from 'react-icons/tb';
 

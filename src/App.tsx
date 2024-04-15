@@ -11,7 +11,7 @@ import Settings from './pages/Settings';
 import CreateUsername from './pages/CreateUsername';
 import NotFound from './pages/NotFound';
 import { auth, usersCollectionRef } from './config/firebase';
-import { uidExistsWithUsername } from './helpers/user';
+import { uidExistsWithUsername } from './services/user';
 import { limit, onSnapshot, query, where } from 'firebase/firestore';
 import IUser from './types/IUser';
 

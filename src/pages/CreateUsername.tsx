@@ -8,7 +8,7 @@ import {
 } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { useForm } from '@mantine/form';
-import { createUpdateUsername, uidExistsWithUsername } from '../helpers/user';
+import { createUpdateUsername, uidExistsWithUsername } from '../services/user';
 import { auth } from '../config/firebase';
 import UserError from '../errors/UserError';
 import { onAuthStateChanged } from 'firebase/auth';

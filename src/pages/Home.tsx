@@ -21,7 +21,7 @@ import { formatDistanceToNow } from 'date-fns';
 import AppContainer from '../components/AppContainer';
 import PaletteBar from '../components/PaletteBar';
 import { palettesCollectionRef } from '../config/firebase';
-import { getUserName } from '../helpers/user';
+import { getUserName } from '../services/user';
 // import { PiHeart } from 'react-icons/pi';
 import IPalettePost from '../types/IPalettePost';
 

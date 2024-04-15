@@ -29,7 +29,7 @@ import { deleteObject, ref } from 'firebase/storage';
 import EmailVerificationPaper from '../components/EmailVerificationPaper';
 import ChangeAvatarModal from '../components/ChangeAvatarModal';
 import ChangePasswordModal from '../components/ChangePasswordModal';
-import { createUpdateUsername } from '../helpers/user';
+import { createUpdateUsername } from '../services/user';
 import { auth, storage } from '../config/firebase';
 import UserError from '../errors/UserError';
 import IUser from '../types/IUser';
