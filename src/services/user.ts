@@ -10,7 +10,7 @@ import { usersCollectionRef } from '../config/firebase';
 import UserError from '../errors/UserError';
 import IUser from '../types/IUser';
 
-async function getUserName(uid: string): Promise<string> {
+async function getUsername(uid: string): Promise<string> {
   let username = '';
 
   const q = query(usersCollectionRef, where('uid', '==', uid), limit(1));
@@ -94,7 +94,7 @@ async function createUpdateUsername(
 }
 
 export {
-  getUserName,
+  getUsername,
   usernameExists,
   uidExistsWithUsername,
   createUpdateUsername,

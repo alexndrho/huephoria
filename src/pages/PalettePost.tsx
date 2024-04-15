@@ -21,7 +21,7 @@ import {
 } from '@mantine/core';
 import { formatDistanceToNow } from 'date-fns';
 import NotFoundWithContainer from './NotFoundWithContainer';
-import { getUserName } from '../services/user';
+import { getUsername } from '../services/user';
 import { hexToRgb } from '../helpers/color';
 import { TbX } from 'react-icons/tb';
 
@@ -43,7 +43,7 @@ function PalettePost() {
       const docSnap = await getDoc(docRef);
 
       const data = docSnap.data() as IPalettePost;
-      const author = await getUserName(data.uid);
+      const author = await getUsername(data.uid);
 
       setPalettePost({ ...data, author });
     } catch (error) {

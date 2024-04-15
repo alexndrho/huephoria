@@ -21,7 +21,7 @@ import { formatDistanceToNow } from 'date-fns';
 import AppContainer from '../components/AppContainer';
 import PaletteBar from '../components/PaletteBar';
 import { palettesCollectionRef } from '../config/firebase';
-import { getUserName } from '../services/user';
+import { getUsername } from '../services/user';
 // import { PiHeart } from 'react-icons/pi';
 import IPalettePost from '../types/IPalettePost';
 
@@ -46,7 +46,7 @@ function Home() {
 
       const palettePosts = await Promise.all(
         querySnapshot.docs.map(async (doc) => {
-          const author = await getUserName(doc.data().uid);
+          const author = await getUsername(doc.data().uid);
 
           return {
             ...(doc.data() as Omit<IPalettePost, 'id' | 'author'>),
@@ -84,7 +84,7 @@ function Home() {
       const newPalettePosts = await Promise.all([
         ...palettePosts,
         ...querySnapshot.docs.map(async (doc) => {
-          const author = await getUserName(doc.data().uid);
+          const author = await getUsername(doc.data().uid);
 
           return {
             ...(doc.data() as Omit<IPalettePost, 'id' | 'author'>),
