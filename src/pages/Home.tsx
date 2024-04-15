@@ -23,15 +23,13 @@ import PaletteBar from '../components/PaletteBar';
 import { palettesCollectionRef } from '../config/firebase';
 import { getUserName } from '../helpers/user';
 // import { PiHeart } from 'react-icons/pi';
-import { IPalettePostWithUsername } from '../types/IPalettePost';
+import IPalettePost from '../types/IPalettePost';
 
 const POST_PER_ROW = 4;
 const POST_PER_PAGE = POST_PER_ROW * 3;
 
 function Home() {
-  const [palettePosts, setPalettePosts] = useState<IPalettePostWithUsername[]>(
-    []
-  );
+  const [palettePosts, setPalettePosts] = useState<IPalettePost[]>([]);
   const [totalPalettePosts, setTotalPalettePosts] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -48,12 +46,12 @@ function Home() {
 
       const palettePosts = await Promise.all(
         querySnapshot.docs.map(async (doc) => {
-          const username = await getUserName(doc.data().uid);
+          const author = await getUserName(doc.data().uid);
 
           return {
-            ...(doc.data() as IPalettePostWithUsername),
+            ...(doc.data() as Omit<IPalettePost, 'id' | 'author'>),
             id: doc.id,
-            username,
+            author,
           };
         })
       );
@@ -86,12 +84,12 @@ function Home() {
       const newPalettePosts = await Promise.all([
         ...palettePosts,
         ...querySnapshot.docs.map(async (doc) => {
-          const username = await getUserName(doc.data().uid);
+          const author = await getUserName(doc.data().uid);
 
           return {
-            ...(doc.data() as IPalettePostWithUsername),
+            ...(doc.data() as Omit<IPalettePost, 'id' | 'author'>),
             id: doc.id,
-            username,
+            author,
           };
         }),
       ]);
@@ -152,7 +150,7 @@ function Home() {
                 {post.title}
               </Title>
               <Text lh={1.25} lineClamp={1}>
-                By {post.username}
+                By {post.author}
               </Text>
             </Anchor>
 

@@ -4,7 +4,7 @@ import PaletteBar from '../components/PaletteBar';
 import { useCallback, useEffect, useState } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
-import IPalettePost, { IPalettePostWithUsername } from '../types/IPalettePost';
+import IPalettePost from '../types/IPalettePost';
 import {
   ActionIcon,
   Badge,
@@ -32,8 +32,7 @@ function PalettePost() {
 
   const [notFound, setNotFound] = useState(false);
 
-  const [palettePost, setPalettePost] =
-    useState<IPalettePostWithUsername | null>(null);
+  const [palettePost, setPalettePost] = useState<IPalettePost | null>(null);
 
   const getPalette = useCallback(async () => {
     if (!id) return;
@@ -44,9 +43,9 @@ function PalettePost() {
       const docSnap = await getDoc(docRef);
 
       const data = docSnap.data() as IPalettePost;
-      const username = await getUserName(data.uid);
+      const author = await getUserName(data.uid);
 
-      setPalettePost({ ...data, username });
+      setPalettePost({ ...data, author });
     } catch (error) {
       console.error('Error getting document:', error);
       setNotFound(true);
@@ -87,7 +86,7 @@ function PalettePost() {
             </Flex>
 
             <Group mb="xl" justify="space-between">
-              <Text>By {palettePost.username}</Text>
+              <Text>By {palettePost.author}</Text>
 
               <Text>
                 {formatDistanceToNow(palettePost.createdAt.toDate(), {

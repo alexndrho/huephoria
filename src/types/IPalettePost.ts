@@ -4,15 +4,12 @@ interface IPalettePost {
   id: string;
   uid: string;
   title: string;
+  author: string;
   description: string;
   colors: string[];
   tags: string[];
+  // likes: number;
   createdAt: firebase.firestore.Timestamp;
 }
 
-interface IPalettePostWithUsername extends IPalettePost {
-  username: string;
-}
-
 export default IPalettePost;
-export type { IPalettePostWithUsername };
