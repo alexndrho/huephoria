@@ -24,3 +24,4 @@ function LikeButton({ likes, userLike, ...props }: LikeButtonProps) {
 }
 
 export default LikeButton;
+export type { LikeButtonProps };
