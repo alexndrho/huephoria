@@ -131,7 +131,7 @@ function PalettePost() {
                     onClick={handleLike}
                   />
 
-                  <Text size="xs">
+                  <Text size="sm">
                     {formatDistanceToNow(palettePost.createdAt.toDate())}
                   </Text>
                 </Group>
