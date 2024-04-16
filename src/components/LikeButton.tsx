@@ -1,7 +1,6 @@
-import { Button, ButtonProps } from '@mantine/core';
+import { Button } from '@mantine/core';
 import { PiHeart, PiHeartFill } from 'react-icons/pi';
-
-type ButtonType = ButtonProps & React.ComponentPropsWithoutRef<'button'>;
+import { ButtonType } from '../types/components';
 
 interface LikeButtonProps extends ButtonType {
   likes: number;
