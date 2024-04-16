@@ -121,14 +121,15 @@ function PalettePost() {
               <Box w="350">
                 <PaletteBar palette={palettePost.colors} />
 
-                <Group mt="md" justify="space-between">
+                <Group mt="xs" justify="space-between">
                   <LikeButton
                     userLike={palettePost.userLike}
                     likes={palettePost.likes}
+                    size="xs"
                     onClick={handleLike}
                   />
 
-                  <Text>
+                  <Text size="xs">
                     {formatDistanceToNow(palettePost.createdAt.toDate())}
                   </Text>
                 </Group>

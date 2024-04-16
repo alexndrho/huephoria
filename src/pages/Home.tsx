@@ -133,10 +133,11 @@ function Home() {
 
             <PaletteBar mt="md" palette={post.colors} />
 
-            <Group mt="md" justify="space-between">
+            <Group mt="xs" justify="space-between">
               <LikeButton
                 userLike={post.userLike}
                 likes={post.likes}
+                size="xs"
                 onClick={() => handleLike(post.id)}
               />
 
@@ -166,9 +167,9 @@ function Loading() {
 
           <Skeleton mt="md" radius="lg" style={{ aspectRatio: '9/12' }} />
 
-          <Group justify="space-between">
-            <Skeleton mt="md" h="lg" w="30%" />
-            <Skeleton mt="md" h="lg" w="30%" />
+          <Group mt="xs" justify="space-between">
+            <Skeleton h="lg" w="30%" />
+            <Skeleton h="lg" w="30%" />
           </Group>
         </Grid.Col>
       ))}
