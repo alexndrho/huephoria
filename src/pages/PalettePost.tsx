@@ -19,8 +19,14 @@ import {
 } from '@mantine/core';
 import { formatDistanceToNow } from 'date-fns';
 import NotFoundWithContainer from './NotFoundWithContainer';
-import { getPalettePost } from '../services/palettePost';
+import { useDebouncedCallback } from '@mantine/hooks';
+import {
+  didUserLike,
+  getPalettePost,
+  likePalettePost,
+} from '../services/palettePost';
 import { hexToRgb } from '../helpers/color';
+import LikeButton from '../components/LikeButton';
 import { TbX } from 'react-icons/tb';
 
 function PalettePost() {
@@ -48,6 +54,29 @@ function PalettePost() {
 
     fetchPalettePost();
   }, [id]);
+
+  const serverLike = useDebouncedCallback(async () => {
+    if (!palettePost) return;
+
+    const didServerLike = await didUserLike(palettePost.id);
+    if (palettePost?.userLike === didServerLike) return;
+
+    await likePalettePost(palettePost.id);
+  }, 600);
+
+  const handleLike = () => {
+    setPalettePost((prev) =>
+      prev
+        ? {
+            ...prev,
+            likes: prev.userLike ? prev.likes - 1 : prev.likes + 1,
+            userLike: !prev.userLike,
+          }
+        : null
+    );
+
+    serverLike();
+  };
 
   if (notFound) return <NotFoundWithContainer />;
 
@@ -80,12 +109,6 @@ function PalettePost() {
 
             <Group mb="xl" justify="space-between">
               <Text>By {palettePost.author}</Text>
-
-              <Text>
-                {formatDistanceToNow(palettePost.createdAt.toDate(), {
-                  addSuffix: true,
-                })}
-              </Text>
             </Group>
 
             <Flex
@@ -95,7 +118,21 @@ function PalettePost() {
               align="center"
               gap="xl"
             >
-              <PaletteBar w="350" palette={palettePost.colors} />
+              <Box w="350">
+                <PaletteBar palette={palettePost.colors} />
+
+                <Group mt="md" justify="space-between">
+                  <LikeButton
+                    userLike={palettePost.userLike}
+                    likes={palettePost.likes}
+                    onClick={handleLike}
+                  />
+
+                  <Text>
+                    {formatDistanceToNow(palettePost.createdAt.toDate())}
+                  </Text>
+                </Group>
+              </Box>
 
               <Box w={{ base: '300', md: '500' }}>
                 <Table>

@@ -1,6 +1,9 @@
 import {
   addDoc,
+  collection,
+  deleteDoc,
   doc,
+  getCountFromServer,
   getDoc,
   getDocs,
   limit,
@@ -8,11 +11,13 @@ import {
   query,
   serverTimestamp,
   startAfter,
+  where,
 } from 'firebase/firestore';
 import { getUsername } from './user';
 import { auth, db, palettesCollectionRef } from '../config/firebase';
 import IPalettePost, {
   IPalettePostEntry,
+  IPalettePostLikeSubmit,
   IPalettePostSubmit,
 } from '../types/IPalettePost';
 
@@ -34,6 +39,8 @@ const getPalettePost = async (id: string) => {
     ...(data as IPalettePostEntry),
     id: docSnap.id,
     author,
+    likes: await getLikesCount(id),
+    userLike: await didUserLike(id),
   } satisfies IPalettePost;
 };
 
@@ -54,6 +61,8 @@ const getInitialPalettePosts = async () => {
         ...(doc.data() as IPalettePostEntry),
         id: doc.id,
         author,
+        likes: await getLikesCount(doc.id),
+        userLike: await didUserLike(doc.id),
       } satisfies IPalettePost;
     })
   );
@@ -79,6 +88,8 @@ const getMorePalettePosts = async (lastPost: IPalettePost) => {
         ...(doc.data() as IPalettePostEntry),
         id: doc.id,
         author,
+        likes: await getLikesCount(doc.id),
+        userLike: await didUserLike(doc.id),
       } satisfies IPalettePost;
     })
   );
@@ -101,6 +112,45 @@ const submitPalettePost = async (
   return doc;
 };
 
+const likePalettePost = async (id: string) => {
+  const likesCollectionRef = collection(palettesCollectionRef, id, 'likes');
+  const uid = auth.currentUser?.uid;
+  if (!uid) throw new Error('User not found');
+
+  const q = query(likesCollectionRef, where('uid', '==', uid), limit(1));
+  const querySnapshot = await getDocs(q);
+
+  if (!querySnapshot.empty) {
+    await deleteDoc(querySnapshot.docs[0].ref);
+    return;
+  }
+
+  const like = await addDoc(likesCollectionRef, {
+    uid,
+    createdAt: serverTimestamp(),
+  } satisfies IPalettePostLikeSubmit);
+
+  return like;
+};
+
+const didUserLike = async (id: string) => {
+  const likesCollectionRef = collection(palettesCollectionRef, id, 'likes');
+  const uid = auth.currentUser?.uid;
+  if (!uid) return false;
+
+  const q = query(likesCollectionRef, where('uid', '==', uid), limit(1));
+  const querySnapshot = await getDocs(q);
+
+  return !querySnapshot.empty;
+};
+
+const getLikesCount = async (id: string) => {
+  const likesCollectionRef = collection(palettesCollectionRef, id, 'likes');
+  const snapshot = await getCountFromServer(likesCollectionRef);
+
+  return snapshot.data().count;
+};
+
 export {
   POST_PER_ROW,
   POST_PER_PAGE,
@@ -108,4 +158,7 @@ export {
   getInitialPalettePosts,
   getMorePalettePosts,
   submitPalettePost,
+  likePalettePost,
+  didUserLike,
+  getLikesCount,
 };

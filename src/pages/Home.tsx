@@ -13,14 +13,17 @@ import { getCountFromServer } from 'firebase/firestore';
 import { formatDistanceToNow } from 'date-fns';
 import AppContainer from '../components/AppContainer';
 import PaletteBar from '../components/PaletteBar';
+import LikeButton from '../components/LikeButton';
 import { palettesCollectionRef } from '../config/firebase';
 import {
   POST_PER_ROW,
+  didUserLike,
   getInitialPalettePosts,
   getMorePalettePosts,
+  likePalettePost,
 } from '../services/palettePost';
-// import { PiHeart } from 'react-icons/pi';
 import IPalettePost from '../types/IPalettePost';
+import { useDebouncedCallback } from '@mantine/hooks';
 
 function Home() {
   const [palettePosts, setPalettePosts] = useState<IPalettePost[]>([]);
@@ -75,6 +78,34 @@ function Home() {
     };
   }, [isLoading, palettePosts, totalPalettePosts]);
 
+  const serverLike = useDebouncedCallback(async (id: string) => {
+    const userLike = palettePosts.find((post) => post.id === id)?.userLike;
+    if (userLike === undefined) return;
+
+    const didServerLike = await didUserLike(id);
+    if (userLike === didServerLike) return;
+
+    await likePalettePost(id);
+  }, 600);
+
+  const handleLike = (id: string) => {
+    setPalettePosts((prev) =>
+      prev.map((post) => {
+        if (post.id === id) {
+          return {
+            ...post,
+            likes: post.likes + (post.userLike ? -1 : 1),
+            userLike: !post.userLike,
+          };
+        }
+
+        return post;
+      })
+    );
+
+    serverLike(id);
+  };
+
   return (
     <AppContainer>
       <Group mb="xl" justify="space-between">
@@ -103,15 +134,14 @@ function Home() {
             <PaletteBar mt="md" palette={post.colors} />
 
             <Group mt="md" justify="space-between">
-              {/* <Button
-                variant="default"
-                leftSection={<PiHeart fontSize={20} />}
-              ></Button> */}
+              <LikeButton
+                userLike={post.userLike}
+                likes={post.likes}
+                onClick={() => handleLike(post.id)}
+              />
 
               <Text size="sm">
-                {formatDistanceToNow(post.createdAt.toDate(), {
-                  addSuffix: true,
-                })}
+                {formatDistanceToNow(post.createdAt.toDate())}
               </Text>
             </Group>
           </Grid.Col>
