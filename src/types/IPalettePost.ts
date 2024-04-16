@@ -1,16 +1,25 @@
 import firebase from 'firebase/compat/app';
+import { FieldValue } from 'firebase/firestore';
 
-interface IPalettePost {
-  id: string;
+interface IPalettePostEntry {
   uid: string;
   title: string;
-  author: string;
   description: string;
   isCreator: boolean;
   colors: string[];
   tags: string[];
-  // likes: number;
   createdAt: firebase.firestore.Timestamp;
 }
 
+interface IPalettePostSubmit extends Omit<IPalettePostEntry, 'createdAt'> {
+  createdAt: FieldValue;
+}
+
+interface IPalettePost extends IPalettePostEntry {
+  id: string;
+  author: string;
+  // likes: number;
+}
+
 export default IPalettePost;
+export type { IPalettePostEntry, IPalettePostSubmit };

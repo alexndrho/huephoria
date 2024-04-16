@@ -1,9 +1,7 @@
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import AppContainer from '../components/AppContainer';
 import PaletteBar from '../components/PaletteBar';
-import { useCallback, useEffect, useState } from 'react';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import { useEffect, useState } from 'react';
 import IPalettePost from '../types/IPalettePost';
 import {
   ActionIcon,
@@ -21,7 +19,7 @@ import {
 } from '@mantine/core';
 import { formatDistanceToNow } from 'date-fns';
 import NotFoundWithContainer from './NotFoundWithContainer';
-import { getUsername } from '../services/user';
+import { getPalettePost } from '../services/palettePost';
 import { hexToRgb } from '../helpers/color';
 import { TbX } from 'react-icons/tb';
 
@@ -34,27 +32,22 @@ function PalettePost() {
 
   const [palettePost, setPalettePost] = useState<IPalettePost | null>(null);
 
-  const getPalette = useCallback(async () => {
-    if (!id) return;
-
-    try {
-      const docRef = doc(db, 'palettes', id);
-
-      const docSnap = await getDoc(docRef);
-
-      const data = docSnap.data() as IPalettePost;
-      const author = await getUsername(data.uid);
-
-      setPalettePost({ ...data, author });
-    } catch (error) {
-      console.error('Error getting document:', error);
-      setNotFound(true);
-    }
-  }, [id]);
-
   useEffect(() => {
-    getPalette();
-  }, [getPalette]);
+    const fetchPalettePost = async () => {
+      if (!id) return;
+
+      try {
+        const post = await getPalettePost(id);
+
+        setPalettePost(post);
+      } catch (error) {
+        setNotFound(true);
+        console.error(error);
+      }
+    };
+
+    fetchPalettePost();
+  }, [id]);
 
   if (notFound) return <NotFoundWithContainer />;
 

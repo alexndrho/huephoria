@@ -17,9 +17,9 @@ import { useEffect, useState } from 'react';
 import { useForm } from '@mantine/form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
-import { addDoc, serverTimestamp } from 'firebase/firestore';
 import PaletteBarEdit from '../components/PaletteBarEdit';
-import { auth, palettesCollectionRef } from '../config/firebase';
+import { submitPalettePost } from '../services/palettePost';
+import { auth } from '../config/firebase';
 import { TbX } from 'react-icons/tb';
 import classes from '../styles/PaletteSubmit.module.css';
 
@@ -67,22 +67,16 @@ function PaletteSubmit() {
   });
 
   const handleSubmit = async (values: typeof form.values) => {
-    if (!auth.currentUser) return;
-
     try {
       setIsLoading(true);
+      setError('');
 
-      const doc = await addDoc(palettesCollectionRef, {
-        ...values,
-        uid: auth.currentUser.uid,
-        createdAt: serverTimestamp(),
-      });
+      const doc = await submitPalettePost(values);
 
-      setIsLoading(false);
       navigate(`/palette/${doc.id}`);
+      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-
       setError('Failed to submit palette');
     }
   };

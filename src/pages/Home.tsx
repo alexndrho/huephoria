@@ -7,118 +7,64 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  getCountFromServer,
-  getDocs,
-  limit,
-  orderBy,
-  query,
-  startAfter,
-} from 'firebase/firestore';
+import { getCountFromServer } from 'firebase/firestore';
 import { formatDistanceToNow } from 'date-fns';
 import AppContainer from '../components/AppContainer';
 import PaletteBar from '../components/PaletteBar';
 import { palettesCollectionRef } from '../config/firebase';
-import { getUsername } from '../services/user';
+import {
+  POST_PER_ROW,
+  getInitialPalettePosts,
+  getMorePalettePosts,
+} from '../services/palettePost';
 // import { PiHeart } from 'react-icons/pi';
 import IPalettePost from '../types/IPalettePost';
-
-const POST_PER_ROW = 4;
-const POST_PER_PAGE = POST_PER_ROW * 3;
 
 function Home() {
   const [palettePosts, setPalettePosts] = useState<IPalettePost[]>([]);
   const [totalPalettePosts, setTotalPalettePosts] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchInitialPosts = useCallback(async () => {
-    setIsLoading(true);
-
-    try {
-      const q = query(
-        palettesCollectionRef,
-        orderBy('createdAt', 'desc'),
-        limit(POST_PER_PAGE)
-      );
-      const querySnapshot = await getDocs(q);
-
-      const palettePosts = await Promise.all(
-        querySnapshot.docs.map(async (doc) => {
-          const author = await getUsername(doc.data().uid);
-
-          return {
-            ...(doc.data() as Omit<IPalettePost, 'id' | 'author'>),
-            id: doc.id,
-            author,
-          };
-        })
-      );
-
-      setPalettePosts(palettePosts);
-
-      const snapshot = await getCountFromServer(palettesCollectionRef);
-      setTotalPalettePosts(snapshot.data().count);
-
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-      throw error;
-    }
-  }, []);
-
-  const fetchNextPagePosts = useCallback(async () => {
-    if (!palettePosts.length || isLoading) return;
-
-    setIsLoading(true);
-    try {
-      const q = query(
-        palettesCollectionRef,
-        orderBy('createdAt', 'desc'),
-        startAfter(palettePosts[palettePosts.length - 1].createdAt),
-        limit(POST_PER_PAGE)
-      );
-
-      const querySnapshot = await getDocs(q);
-      const newPalettePosts = await Promise.all([
-        ...palettePosts,
-        ...querySnapshot.docs.map(async (doc) => {
-          const author = await getUsername(doc.data().uid);
-
-          return {
-            ...(doc.data() as Omit<IPalettePost, 'id' | 'author'>),
-            id: doc.id,
-            author,
-          };
-        }),
-      ]);
-
-      setPalettePosts(newPalettePosts);
-
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-      throw error;
-    }
-  }, [isLoading, palettePosts]);
-
   useEffect(() => {
-    fetchInitialPosts().catch((error) => {
-      console.error(error);
-    });
-  }, [fetchInitialPosts]);
+    setIsLoading(true);
+
+    getInitialPalettePosts()
+      .then(async (posts) => {
+        setPalettePosts(posts);
+
+        const snapshot = await getCountFromServer(palettesCollectionRef);
+        setTotalPalettePosts(snapshot.data().count);
+
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        console.error(error);
+      });
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
       if (
+        !isLoading &&
+        palettePosts.length &&
         totalPalettePosts > palettePosts.length &&
         window.innerHeight + window.scrollY >=
           document.documentElement.scrollHeight - 100
       ) {
-        fetchNextPagePosts().catch((error) => {
-          console.error(error);
-        });
+        setIsLoading(true);
+
+        getMorePalettePosts(palettePosts[palettePosts.length - 1])
+          .then((posts) => {
+            setPalettePosts((prev) => [...prev, ...posts]);
+            setIsLoading(false);
+          })
+          .catch((error) => {
+            setIsLoading(false);
+            console.error(error);
+          });
       }
     };
 
@@ -127,7 +73,7 @@ function Home() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [fetchNextPagePosts, palettePosts, totalPalettePosts]);
+  }, [isLoading, palettePosts, totalPalettePosts]);
 
   return (
     <AppContainer>
