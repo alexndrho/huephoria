@@ -8,8 +8,8 @@ import {
   isLightColor,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { FaCheck } from 'react-icons/fa6';
 import classes from '../styles/PaletteBar.module.css';
+import { FaClipboardCheck } from 'react-icons/fa';
 
 interface PaletteBarProps extends BoxProps {
   palette: string[];
@@ -28,7 +28,11 @@ function PaletteBar({ palette, ...props }: PaletteBarProps) {
                 onClick={() => {
                   copy();
                   notifications.show({
-                    icon: <FaCheck />,
+                    icon: (
+                      <Text c={isLightColor(color) ? 'dark' : 'gray'}>
+                        <FaClipboardCheck />
+                      </Text>
+                    ),
                     title: 'Color copied',
                     message: color,
                     color: color,
