@@ -11,6 +11,7 @@ import {
   Container,
   Flex,
   Group,
+  Paper,
   Skeleton,
   Table,
   Text,
@@ -167,7 +168,11 @@ function PalettePost() {
               </Box>
             </Flex>
 
-            <Text>{palettePost.description}</Text>
+            {palettePost.description && (
+              <Paper p="lg" shadow="xs" withBorder>
+                <Text>{palettePost.description}</Text>
+              </Paper>
+            )}
 
             <Group mt="lg" justify="center">
               <Group justify="space-between">
