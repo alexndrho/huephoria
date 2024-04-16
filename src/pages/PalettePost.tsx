@@ -139,9 +139,9 @@ function PalettePost() {
                 <Table>
                   <Table.Thead>
                     <Table.Tr>
-                      <Table.Th>Color</Table.Th>
-                      <Table.Th>Hex</Table.Th>
-                      <Table.Th>RGB</Table.Th>
+                      <Table.Th ta="center">Color</Table.Th>
+                      <Table.Th ta="center">Hex</Table.Th>
+                      <Table.Th ta="center">RGB</Table.Th>
                     </Table.Tr>
                   </Table.Thead>
 
@@ -149,12 +149,12 @@ function PalettePost() {
                     {palettePost.colors.map((color) => (
                       <Table.Tr key={crypto.randomUUID()}>
                         <Table.Td>
-                          <ColorSwatch color={color} />
+                          <ColorSwatch mx="auto" color={color} />
                         </Table.Td>
 
-                        <Table.Td>{color}</Table.Td>
+                        <Table.Td ta="center">{color}</Table.Td>
 
-                        <Table.Td>{hexToRgb(color)}</Table.Td>
+                        <Table.Td ta="center">{hexToRgb(color)}</Table.Td>
                       </Table.Tr>
                     ))}
                   </Table.Tbody>
