@@ -19,6 +19,7 @@ import {
 } from '@mantine/core';
 import { formatDistanceToNow } from 'date-fns';
 import NotFoundWithContainer from './NotFoundWithContainer';
+import ColorCopyButton from '../components/ColorCopyButton';
 import { useDebouncedCallback } from '@mantine/hooks';
 import {
   didUserLike,
@@ -152,9 +153,13 @@ function PalettePost() {
                           <ColorSwatch mx="auto" color={color} />
                         </Table.Td>
 
-                        <Table.Td ta="center">{color}</Table.Td>
+                        <Table.Td ta="center">
+                          <ColorCopyButton color={color} />
+                        </Table.Td>
 
-                        <Table.Td ta="center">{hexToRgb(color)}</Table.Td>
+                        <Table.Td ta="center">
+                          <ColorCopyButton color={hexToRgb(color)} />
+                        </Table.Td>
                       </Table.Tr>
                     ))}
                   </Table.Tbody>
