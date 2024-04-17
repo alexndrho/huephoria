@@ -98,7 +98,7 @@ const getMorePalettePosts = async (lastPost: IPalettePost) => {
 };
 
 const submitPalettePost = async (
-  values: Omit<IPalettePost, 'id' | 'uid' | 'author' | 'createdAt'>
+  values: Omit<IPalettePostSubmit, 'uid' | 'createdAt'>
 ) => {
   const uid = auth.currentUser?.uid;
   if (!uid) throw new Error('User not found');
