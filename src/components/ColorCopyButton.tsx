@@ -1,4 +1,13 @@
-import { Button, ButtonProps, CopyButton, Tooltip } from '@mantine/core';
+import {
+  Button,
+  ButtonProps,
+  CopyButton,
+  Text,
+  Tooltip,
+  isLightColor,
+} from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import { FaClipboardCheck } from 'react-icons/fa';
 
 interface ColorCopyButtonProps extends ButtonProps {
   color: string;
@@ -14,7 +23,19 @@ function ColorCopyButton({ color, ...props }: ColorCopyButtonProps) {
             color="gray"
             size="compact-md"
             {...props}
-            onClick={copy}
+            onClick={() => {
+              copy();
+              notifications.show({
+                icon: (
+                  <Text c={isLightColor(color) ? 'dark' : 'gray'}>
+                    <FaClipboardCheck />
+                  </Text>
+                ),
+                title: 'Color copied',
+                message: color,
+                color: color,
+              });
+            }}
           >
             {color}
           </Button>
