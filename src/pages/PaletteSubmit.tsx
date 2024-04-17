@@ -142,8 +142,8 @@ function PaletteSubmit() {
 
           <PaletteBarEdit
             w={300}
-            palette={form.values['colors']}
-            setPalette={(setter) => form.setFieldValue('colors', setter)}
+            colors={form.values['colors']}
+            setColors={(setter) => form.setFieldValue('colors', setter)}
             error={form.errors['colors']}
           />
         </Flex>

@@ -20,16 +20,16 @@ import classes from '../styles/PaletteBarEdit.module.css';
 interface PaletteBarEditProps {
   w?: string | number;
   h?: string | number;
-  palette: string[];
-  setPalette: (setter: (prevValue: string[]) => string[]) => void;
+  colors: string[];
+  setColors: (setter: (prevValue: string[]) => string[]) => void;
   error: ReactNode;
 }
 
 function PaletteBarEdit({
   w,
   h,
-  palette,
-  setPalette,
+  colors,
+  setColors,
   error,
 }: PaletteBarEditProps) {
   const [openedColor, setOpenedColor] = useState(false);
@@ -45,11 +45,11 @@ function PaletteBarEdit({
     setOpenedColor(false);
     setColor('#000000');
     setColorError('');
-    setPalette((prevValue) => [...prevValue, color]);
+    setColors((prevValue) => [...prevValue, color]);
   };
 
   const deleteColor = (index: number) => {
-    setPalette((prevValue) => prevValue.filter((_, i) => i !== index));
+    setColors((prevValue) => prevValue.filter((_, i) => i !== index));
   };
 
   const setColorInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,7 +67,7 @@ function PaletteBarEdit({
             error ? classes['paletteBar--error'] : ''
           }`}
         >
-          {palette.map((color, index) => (
+          {colors.map((color, index) => (
             <Flex
               key={crypto.randomUUID()}
               className={classes.paletteBar__bar}
@@ -81,7 +81,7 @@ function PaletteBarEdit({
             </Flex>
           ))}
 
-          {palette.length < 6 && (
+          {colors.length < 6 && (
             <Popover
               opened={openedColor}
               onChange={setOpenedColor}
