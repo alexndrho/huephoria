@@ -134,10 +134,7 @@ function Home() {
 
       <Grid gutter="xl">
         {palettePosts.map((post) => (
-          <Grid.Col
-            key={crypto.randomUUID()}
-            span={{ base: 12, xs: 6, md: 4, lg: 3 }}
-          >
+          <Grid.Col key={post.id} span={{ base: 12, xs: 6, md: 4, lg: 3 }}>
             <Anchor component={Link} to={`/palette/${post.id}`} c="gray">
               <Title order={2} size="h3" lh={1.25} lineClamp={1}>
                 {post.title}
@@ -173,11 +170,8 @@ function Home() {
 function Loading() {
   return (
     <Grid mt="xl" gutter="xl">
-      {Array.from({ length: POST_PER_ROW }).map(() => (
-        <Grid.Col
-          key={crypto.randomUUID()}
-          span={{ base: 12, xs: 6, md: 4, lg: 3 }}
-        >
+      {Array.from({ length: POST_PER_ROW }).map((_, index) => (
+        <Grid.Col key={index} span={{ base: 12, xs: 6, md: 4, lg: 3 }}>
           <Skeleton h="lg" />
           <Skeleton mt="xs" h="md" w="40%" />
 
