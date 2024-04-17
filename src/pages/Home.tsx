@@ -14,7 +14,7 @@ import { formatDistanceToNow } from 'date-fns';
 import AppContainer from '../components/AppContainer';
 import PaletteBar from '../components/PaletteBar';
 import LikeButton from '../components/LikeButton';
-import { palettesCollectionRef } from '../config/firebase';
+import { auth, palettesCollectionRef } from '../config/firebase';
 import {
   POST_PER_ROW,
   didUserLike,
@@ -23,11 +23,16 @@ import {
   likePalettePost,
 } from '../services/palettePost';
 import IPalettePost from '../types/IPalettePost';
-import { useDebouncedCallback } from '@mantine/hooks';
+import { useDebouncedCallback, useDisclosure } from '@mantine/hooks';
+import LoginWarningModal from '../components/LoginWarningModal';
 
 function Home() {
   const [palettePosts, setPalettePosts] = useState<IPalettePost[]>([]);
   const [totalPalettePosts, setTotalPalettePosts] = useState(0);
+  const [
+    openedLoginWarning,
+    { open: openLoginWarning, close: closeLoginWarning },
+  ] = useDisclosure();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -89,6 +94,12 @@ function Home() {
   }, 600);
 
   const handleLike = (id: string) => {
+    const user = auth.currentUser;
+    if (!user) {
+      openLoginWarning();
+      return;
+    }
+
     setPalettePosts((prev) =>
       prev.map((post) => {
         if (post.id === id) {
@@ -108,6 +119,11 @@ function Home() {
 
   return (
     <AppContainer>
+      <LoginWarningModal
+        opened={openedLoginWarning}
+        onClose={closeLoginWarning}
+      />
+
       <Group mb="xl" justify="space-between">
         <Title>Home</Title>
 

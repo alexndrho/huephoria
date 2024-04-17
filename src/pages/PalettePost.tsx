@@ -1,8 +1,3 @@
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import AppContainer from '../components/AppContainer';
-import PaletteBar from '../components/PaletteBar';
-import { useEffect, useState } from 'react';
-import IPalettePost from '../types/IPalettePost';
 import {
   ActionIcon,
   Badge,
@@ -18,27 +13,37 @@ import {
   Title,
   Tooltip,
 } from '@mantine/core';
+import { useEffect, useState } from 'react';
+import { useDebouncedCallback, useDisclosure } from '@mantine/hooks';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
+import AppContainer from '../components/AppContainer';
+import PaletteBar from '../components/PaletteBar';
+import LikeButton from '../components/LikeButton';
 import NotFoundWithContainer from './NotFoundWithContainer';
 import ColorCopyButton from '../components/ColorCopyButton';
-import { useDebouncedCallback } from '@mantine/hooks';
+import LoginWarningModal from '../components/LoginWarningModal';
+import { auth } from '../config/firebase';
 import {
   didUserLike,
   getPalettePost,
   likePalettePost,
 } from '../services/palettePost';
 import { hexToRgb } from '../helpers/color';
-import LikeButton from '../components/LikeButton';
 import { TbX } from 'react-icons/tb';
+import IPalettePost from '../types/IPalettePost';
 
 function PalettePost() {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [notFound, setNotFound] = useState(false);
-
   const [palettePost, setPalettePost] = useState<IPalettePost | null>(null);
+  const [
+    openedLoginWarning,
+    { open: openLoginWarning, close: closeLoginWarning },
+  ] = useDisclosure();
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     const fetchPalettePost = async () => {
@@ -67,6 +72,12 @@ function PalettePost() {
   }, 600);
 
   const handleLike = () => {
+    const user = auth.currentUser;
+    if (!user) {
+      openLoginWarning();
+      return;
+    }
+
     setPalettePost((prev) =>
       prev
         ? {
@@ -84,6 +95,11 @@ function PalettePost() {
 
   return (
     <AppContainer>
+      <LoginWarningModal
+        opened={openedLoginWarning}
+        onClose={closeLoginWarning}
+      />
+
       <Container pt="md" pb="xl">
         {palettePost ? (
           <>
