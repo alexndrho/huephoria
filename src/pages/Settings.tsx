@@ -320,9 +320,9 @@ function Settings({ userData }: SettingsProps) {
           <form onSubmit={form.onSubmit((val) => handleSaveChanges(val))}>
             <Paper shadow="xs" p="lg" withBorder>
               <Flex direction="column" gap="md">
-                {textInputData.map((data) => (
+                {textInputData.map((data, index) => (
                   <TextInput
-                    key={crypto.randomUUID()}
+                    key={index}
                     rightSection={
                       <ActionIcon
                         variant="default"
