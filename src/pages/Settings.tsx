@@ -26,22 +26,20 @@ import {
 import { useForm } from '@mantine/form';
 import { FirebaseError } from 'firebase/app';
 import { deleteObject, ref } from 'firebase/storage';
+import useAuth from '../hooks/useAuth';
 import EmailVerificationPaper from '../components/EmailVerificationPaper';
 import ChangeAvatarModal from '../components/ChangeAvatarModal';
 import ChangePasswordModal from '../components/ChangePasswordModal';
 import { createUpdateUsername } from '../services/user';
 import { auth, storage } from '../config/firebase';
 import UserError from '../errors/UserError';
-import IUser from '../types/IUser';
 import { TbEdit, TbPhoto, TbTrash, TbX } from 'react-icons/tb';
 
-interface SettingsProps {
-  userData: IUser | null;
-}
-
-function Settings({ userData }: SettingsProps) {
+function Settings() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { userData } = useAuth();
+
   // states
   const [openedChangePass, { open: openChangePass, close: closeChangePass }] =
     useDisclosure();
@@ -367,4 +365,3 @@ function Settings({ userData }: SettingsProps) {
 }
 
 export default Settings;
-export type { SettingsProps };

@@ -10,15 +10,15 @@ import {
   Text,
   UnstyledButton,
 } from '@mantine/core';
-import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
-import { User, onAuthStateChanged, signOut } from 'firebase/auth';
+import { signOut } from 'firebase/auth';
 import { Link, useLocation } from 'react-router-dom';
 import { auth } from '../config/firebase';
-import { TbLogout, TbSettings } from 'react-icons/tb';
+import useAuth from '../hooks/useAuth';
 import NavLinkIcon from './NavLinkIcon';
 import classes from '../styles/AppContainer.module.css';
 import { PiHouse, PiHouseFill } from 'react-icons/pi';
+import { TbLogout, TbSettings } from 'react-icons/tb';
 
 interface AppContainerProps {
   children?: React.ReactNode;
@@ -28,15 +28,7 @@ function AppContainer({ children }: AppContainerProps) {
   const location = useLocation();
   const [opened] = useDisclosure();
 
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
-
-    return () => unSubscribe();
-  }, []);
+  const { user } = useAuth();
 
   const dataLinks = [
     {

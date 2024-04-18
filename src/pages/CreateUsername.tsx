@@ -8,25 +8,23 @@ import {
 } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { useForm } from '@mantine/form';
-import { createUpdateUsername, uidExistsWithUsername } from '../services/user';
+import useAuth from '../hooks/useAuth';
+import { createUpdateUsername } from '../services/user';
 import { auth } from '../config/firebase';
 import UserError from '../errors/UserError';
-import { onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 
 function CreateUsername() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, async (user) => {
-      if (!user || (await uidExistsWithUsername(user?.uid))) {
-        navigate('/');
-      }
-    });
+  const { userData } = useAuth();
 
-    return () => unSubscribe();
-  }, [navigate]);
+  useEffect(() => {
+    if (!userData) {
+      navigate('/');
+    }
+  }, [navigate, userData]);
 
   const form = useForm({
     initialValues: {
