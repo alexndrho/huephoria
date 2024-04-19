@@ -9,6 +9,7 @@ import Signup from './pages/Signup';
 import Settings from './pages/Settings';
 import ForgotPassword from './pages/ForgotPassword';
 import CreateUsername from './pages/CreateUsername';
+import UserManagement from './pages/UserManagement';
 import NotFound from './pages/NotFound';
 
 const router = createBrowserRouter([
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
   {
     path: '/create-username',
     element: <CreateUsername />,
+  },
+  {
+    path: '/usermgmt',
+    element: <UserManagement />,
   },
 
   {
