@@ -81,7 +81,7 @@ function CreateUsername() {
               {...form.getInputProps('username')}
             />
 
-            <Button fullWidth mt="xl" type="submit" loading={isLoading}>
+            <Button fullWidth mt="md" type="submit" loading={isLoading}>
               Create username
             </Button>
           </form>
