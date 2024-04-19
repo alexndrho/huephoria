@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { FirebaseError } from 'firebase/app';
 import { sendEmailVerification } from 'firebase/auth';
 import { auth } from '../config/firebase';
+import { notifications } from '@mantine/notifications';
 import { FaTriangleExclamation } from 'react-icons/fa6';
 import { TbCheck } from 'react-icons/tb';
 
@@ -22,6 +23,11 @@ function EmailVerificationPaper() {
       await sendEmailVerification(user);
 
       setEmailSent(true);
+      notifications.show({
+        title: 'Verification email sent',
+        message: 'Check your email for the verification link',
+      });
+
       setIsLoadingEmailVerification(false);
     } catch (error) {
       setIsLoadingEmailVerification(false);

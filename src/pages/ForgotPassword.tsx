@@ -12,6 +12,7 @@ import { useForm } from '@mantine/form';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import { FirebaseError } from 'firebase/app';
+import { notifications } from '@mantine/notifications';
 import { TbCheck } from 'react-icons/tb';
 
 function ForgotPassword() {
@@ -35,6 +36,11 @@ function ForgotPassword() {
       await sendPasswordResetEmail(auth, values.email);
 
       setEmailSent(true);
+      notifications.show({
+        title: 'Password reset email sent',
+        message: 'Check your email for the password reset link',
+      });
+
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
