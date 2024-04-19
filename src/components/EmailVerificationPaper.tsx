@@ -4,11 +4,13 @@ import { FirebaseError } from 'firebase/app';
 import { sendEmailVerification } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import { FaTriangleExclamation } from 'react-icons/fa6';
+import { TbCheck } from 'react-icons/tb';
 
 function EmailVerificationPaper() {
   const [isLoadingEmailVerification, setIsLoadingEmailVerification] =
     useState(false);
   const [formError, setFormError] = useState('');
+  const [emailSent, setEmailSent] = useState(false);
 
   const handleSendEmailVerification = async () => {
     const user = auth.currentUser;
@@ -19,6 +21,7 @@ function EmailVerificationPaper() {
 
       await sendEmailVerification(user);
 
+      setEmailSent(true);
       setIsLoadingEmailVerification(false);
     } catch (error) {
       setIsLoadingEmailVerification(false);
@@ -56,10 +59,16 @@ function EmailVerificationPaper() {
           <Button
             mt="md"
             variant="default"
+            leftSection={emailSent && <TbCheck />}
             loading={isLoadingEmailVerification}
             onClick={handleSendEmailVerification}
+            disabled={emailSent}
           >
-            Send email
+            {isLoadingEmailVerification
+              ? 'Sending verification email...'
+              : emailSent
+              ? 'Email sent'
+              : 'Send verification email'}
           </Button>
         </Box>
       </Group>

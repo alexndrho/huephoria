@@ -3,7 +3,6 @@ import {
   Center,
   Container,
   Paper,
-  Text,
   TextInput,
   Title,
 } from '@mantine/core';
@@ -13,10 +12,11 @@ import { useForm } from '@mantine/form';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import { FirebaseError } from 'firebase/app';
+import { TbCheck } from 'react-icons/tb';
 
 function ForgotPassword() {
   const [isLoading, setIsLoading] = useState(false);
-  const [formFeedback, setFormFeedback] = useState('');
+  const [emailSent, setEmailSent] = useState(false);
 
   const form = useForm({
     initialValues: {
@@ -31,11 +31,10 @@ function ForgotPassword() {
   const handleSubmit = async (values: typeof form.values) => {
     try {
       setIsLoading(true);
-      setFormFeedback('');
 
       await sendPasswordResetEmail(auth, values.email);
 
-      setFormFeedback('Password reset email sent!');
+      setEmailSent(true);
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
@@ -70,13 +69,14 @@ function ForgotPassword() {
               {...form.getInputProps('email')}
             />
 
-            {formFeedback && (
-              <Text size="xs" c="green.8">
-                {formFeedback}
-              </Text>
-            )}
-
-            <Button fullWidth mt="xl" type="submit" loading={isLoading}>
+            <Button
+              fullWidth
+              mt="xl"
+              type="submit"
+              leftSection={emailSent && <TbCheck />}
+              loading={isLoading}
+              disabled={emailSent}
+            >
               Reset password
             </Button>
 
