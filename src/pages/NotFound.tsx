@@ -29,7 +29,7 @@ function NotFound() {
 
           <Group justify="center">
             <Button component={Link} to="/" variant="subtle" size="md">
-              Take me back to home page
+              Take me back to the home page
             </Button>
           </Group>
         </Box>
