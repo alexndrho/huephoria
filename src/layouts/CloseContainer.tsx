@@ -41,3 +41,4 @@ function CloseContainer({ title, children }: CloseContainerProps) {
 }
 
 export default CloseContainer;
+export type { CloseContainerProps };
