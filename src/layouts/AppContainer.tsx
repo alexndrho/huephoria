@@ -6,6 +6,7 @@ import {
   Container,
   Flex,
   Group,
+  Image,
   Menu,
   Text,
   UnstyledButton,
@@ -52,18 +53,19 @@ function AppContainer({ children }: AppContainerProps) {
     >
       <AppShell.Header>
         <Group h="100%" px="md" justify="space-between">
-          <Group h="100%">
-            <Text
-              component={Link}
-              to="/"
-              reloadDocument
-              c="green"
-              fw="bold"
-              size="xl"
-            >
+          <Text
+            component={Link}
+            to="/"
+            reloadDocument
+            c="green"
+            fw="bold"
+            size="xl"
+          >
+            <Group h="100%" gap="sm">
+              <Image src="/icon.png" w={40} />
               Huephoria
-            </Text>
-          </Group>
+            </Group>
+          </Text>
 
           {user ? (
             <Group h="100%">
