@@ -25,8 +25,9 @@ import {
   likePalettePost,
 } from '../services/palettePost';
 import { hexToRgb } from '../helpers/color';
-import IPalettePost from '../types/IPalettePost';
 import AppCloseContainer from '../layouts/AppCloseContainer';
+import { LuBadgeCheck } from 'react-icons/lu';
+import IPalettePost from '../types/IPalettePost';
 
 function PalettePost() {
   const { id } = useParams();
@@ -89,16 +90,25 @@ function PalettePost() {
 
   return (
     <AppCloseContainer title={palettePost.title}>
-      <Group mb="xl" justify="space-between">
-        <Text>By {palettePost.author}</Text>
-      </Group>
-
       <LoginWarningModal
         opened={openedLoginWarning}
         onClose={closeLoginWarning}
       />
 
+      <Group>
+        <Text>By {palettePost.author}</Text>
+
+        {palettePost.isCreator && (
+          <Flex c="green" align="center" gap={5}>
+            <LuBadgeCheck />
+
+            <Text>Original Creator</Text>
+          </Flex>
+        )}
+      </Group>
+
       <Flex
+        mt="xl"
         mb="xl"
         direction={{ base: 'column', md: 'row' }}
         justify="space-between"
