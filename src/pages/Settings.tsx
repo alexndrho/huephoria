@@ -322,12 +322,14 @@ function Settings() {
                   <TextInput
                     key={index}
                     rightSection={
-                      <ActionIcon
-                        variant="default"
-                        onClick={() => data.setEditable(!data.editable)}
-                      >
-                        <TbEdit />
-                      </ActionIcon>
+                      <Tooltip label="Edit" position="right">
+                        <ActionIcon
+                          variant="default"
+                          onClick={() => data.setEditable(!data.editable)}
+                        >
+                          <TbEdit />
+                        </ActionIcon>
+                      </Tooltip>
                     }
                     style={{ flexGrow: 1 }}
                     label={data.label}
