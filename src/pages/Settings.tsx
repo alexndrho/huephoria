@@ -3,7 +3,6 @@ import {
   Avatar,
   Box,
   Button,
-  Container,
   Flex,
   Group,
   Menu,
@@ -16,7 +15,7 @@ import {
 } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   User,
   onAuthStateChanged,
@@ -27,16 +26,16 @@ import { useForm } from '@mantine/form';
 import { FirebaseError } from 'firebase/app';
 import { deleteObject, ref } from 'firebase/storage';
 import useAuth from '../hooks/useAuth';
+import CloseContainer from '../components/CloseContainer';
 import EmailVerificationPaper from '../components/EmailVerificationPaper';
 import ChangeAvatarModal from '../components/ChangeAvatarModal';
 import ChangePasswordModal from '../components/ChangePasswordModal';
 import { createUpdateUsername } from '../services/user';
 import { auth, storage } from '../config/firebase';
 import UserError from '../errors/UserError';
-import { TbEdit, TbPhoto, TbTrash, TbX } from 'react-icons/tb';
+import { TbEdit, TbPhoto, TbTrash } from 'react-icons/tb';
 
 function Settings() {
-  const location = useLocation();
   const navigate = useNavigate();
   const { userData } = useAuth();
 
@@ -214,7 +213,7 @@ function Settings() {
   ];
 
   return (
-    <Container size="lg" py="lg">
+    <CloseContainer title="Settings">
       <ChangePasswordModal
         opened={openedChangePass}
         onClose={closeChangePass}
@@ -246,28 +245,6 @@ function Settings() {
           </Button>
         </Group>
       </Modal>
-
-      <Group mb={50} justify="space-between">
-        <Title>Settings</Title>
-
-        <Tooltip label="Close">
-          <ActionIcon
-            size="xl"
-            color="gray"
-            variant="subtle"
-            aria-label="close"
-            onClick={() => {
-              if (location.key === 'default') {
-                navigate('/', { replace: true });
-              } else {
-                navigate(-1);
-              }
-            }}
-          >
-            <TbX fontSize="1.75rem" />
-          </ActionIcon>
-        </Tooltip>
-      </Group>
 
       <Flex direction={{ base: 'column', sm: 'row' }}>
         <Flex
@@ -362,7 +339,7 @@ function Settings() {
           </form>
         </Box>
       </Flex>
-    </Container>
+    </CloseContainer>
   );
 }
 

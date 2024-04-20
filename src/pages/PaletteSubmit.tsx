@@ -1,8 +1,6 @@
 import {
-  ActionIcon,
   Button,
   Checkbox,
-  Container,
   Flex,
   Group,
   Paper,
@@ -10,17 +8,15 @@ import {
   Text,
   TextInput,
   Textarea,
-  Title,
-  Tooltip,
 } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { useForm } from '@mantine/form';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
+import CloseContainer from '../components/CloseContainer';
 import PaletteBarEdit from '../components/PaletteBarEdit';
 import { submitPalettePost } from '../services/palettePost';
 import { auth } from '../config/firebase';
-import { TbX } from 'react-icons/tb';
 import classes from '../styles/PaletteSubmit.module.css';
 
 interface FormValues {
@@ -32,7 +28,6 @@ interface FormValues {
 }
 
 function PaletteSubmit() {
-  const location = useLocation();
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -82,29 +77,7 @@ function PaletteSubmit() {
   };
 
   return (
-    <Container size="lg" py="lg">
-      <Group mb="xl" justify="space-between">
-        <Title>Submit a palette</Title>
-
-        <Tooltip label="Close">
-          <ActionIcon
-            size="xl"
-            color="gray"
-            variant="subtle"
-            aria-label="close"
-            onClick={() => {
-              if (location.key === 'default') {
-                navigate('/', { replace: true });
-              } else {
-                navigate(-1);
-              }
-            }}
-          >
-            <TbX fontSize="1.75rem" />
-          </ActionIcon>
-        </Tooltip>
-      </Group>
-
+    <CloseContainer title="Submit a Palette">
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Flex direction={{ base: 'column', sm: 'row' }} align="center" gap="lg">
           <Paper
@@ -159,7 +132,7 @@ function PaletteSubmit() {
           </Button>
         </Group>
       </form>
-    </Container>
+    </CloseContainer>
   );
 }
 
