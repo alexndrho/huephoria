@@ -175,7 +175,7 @@ function PalettePost() {
 function PalettePostSkeleton() {
   return (
     <AppCloseContainer>
-      <Skeleton height={20} />
+      <Skeleton height={20} w={250} />
 
       <Flex
         mt="xl"
