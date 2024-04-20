@@ -1,23 +1,18 @@
 import {
-  ActionIcon,
   Badge,
   Box,
   ColorSwatch,
-  Container,
   Flex,
   Group,
   Paper,
   Skeleton,
   Table,
   Text,
-  Title,
-  Tooltip,
 } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { useDebouncedCallback, useDisclosure } from '@mantine/hooks';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
-import AppContainer from '../layouts/AppContainer';
 import PaletteBar from '../components/PaletteBar';
 import LikeButton from '../components/LikeButton';
 import NotFoundWithContainer from './NotFoundWithContainer';
@@ -30,13 +25,11 @@ import {
   likePalettePost,
 } from '../services/palettePost';
 import { hexToRgb } from '../helpers/color';
-import { TbX } from 'react-icons/tb';
 import IPalettePost from '../types/IPalettePost';
+import AppCloseContainer from '../layouts/AppCloseContainer';
 
 function PalettePost() {
   const { id } = useParams();
-  const location = useLocation();
-  const navigate = useNavigate();
 
   const [palettePost, setPalettePost] = useState<IPalettePost | null>(null);
   const [
@@ -92,160 +85,115 @@ function PalettePost() {
   };
 
   if (notFound) return <NotFoundWithContainer />;
+  if (!palettePost) return <PalettePostSkeleton />;
 
   return (
-    <AppContainer>
+    <AppCloseContainer title={palettePost.title}>
+      <Group mb="xl" justify="space-between">
+        <Text>By {palettePost.author}</Text>
+      </Group>
+
       <LoginWarningModal
         opened={openedLoginWarning}
         onClose={closeLoginWarning}
       />
 
-      <Container pt="md" pb="xl">
-        {palettePost ? (
-          <>
-            <Flex justify="space-between">
-              <Title>{palettePost.title}</Title>
+      <Flex
+        mb="xl"
+        direction={{ base: 'column', md: 'row' }}
+        justify="space-between"
+        align="center"
+        gap="xl"
+      >
+        <Box w="350">
+          <PaletteBar palette={palettePost.colors} />
 
-              <Tooltip label="Close">
-                <ActionIcon
-                  size="xl"
-                  color="gray"
-                  variant="subtle"
-                  aria-label="close"
-                  onClick={() => {
-                    if (location.key === 'default') {
-                      navigate('/', { replace: true });
-                    } else {
-                      navigate(-1);
-                    }
-                  }}
-                >
-                  <TbX fontSize="1.75rem" />
-                </ActionIcon>
-              </Tooltip>
-            </Flex>
+          <Group mt="xs" justify="space-between">
+            <LikeButton
+              userLike={palettePost.userLike}
+              likes={palettePost.likes}
+              size="xs"
+              onClick={handleLike}
+            />
 
-            <Group mb="xl" justify="space-between">
-              <Text>By {palettePost.author}</Text>
-            </Group>
+            <Text size="sm">
+              {formatDistanceToNow(palettePost.createdAt.toDate())}
+            </Text>
+          </Group>
+        </Box>
 
-            <Flex
-              mb="xl"
-              direction={{ base: 'column', md: 'row' }}
-              justify="space-between"
-              align="center"
-              gap="xl"
-            >
-              <Box w="350">
-                <PaletteBar palette={palettePost.colors} />
+        <Box w={{ base: '300', md: '500' }}>
+          <Table>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th ta="center">Color</Table.Th>
+                <Table.Th ta="center">Hex</Table.Th>
+                <Table.Th ta="center">RGB</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
 
-                <Group mt="xs" justify="space-between">
-                  <LikeButton
-                    userLike={palettePost.userLike}
-                    likes={palettePost.likes}
-                    size="xs"
-                    onClick={handleLike}
-                  />
+            <Table.Tbody>
+              {palettePost.colors.map((color) => (
+                <Table.Tr key={crypto.randomUUID()}>
+                  <Table.Td>
+                    <ColorSwatch mx="auto" color={color} />
+                  </Table.Td>
 
-                  <Text size="sm">
-                    {formatDistanceToNow(palettePost.createdAt.toDate())}
-                  </Text>
-                </Group>
-              </Box>
+                  <Table.Td ta="center">
+                    <ColorCopyButton color={color} />
+                  </Table.Td>
 
-              <Box w={{ base: '300', md: '500' }}>
-                <Table>
-                  <Table.Thead>
-                    <Table.Tr>
-                      <Table.Th ta="center">Color</Table.Th>
-                      <Table.Th ta="center">Hex</Table.Th>
-                      <Table.Th ta="center">RGB</Table.Th>
-                    </Table.Tr>
-                  </Table.Thead>
+                  <Table.Td ta="center">
+                    <ColorCopyButton color={hexToRgb(color)} />
+                  </Table.Td>
+                </Table.Tr>
+              ))}
+            </Table.Tbody>
+          </Table>
+        </Box>
+      </Flex>
 
-                  <Table.Tbody>
-                    {palettePost.colors.map((color) => (
-                      <Table.Tr key={crypto.randomUUID()}>
-                        <Table.Td>
-                          <ColorSwatch mx="auto" color={color} />
-                        </Table.Td>
+      {palettePost.description && (
+        <Paper p="lg" shadow="xs" withBorder>
+          <Text>{palettePost.description}</Text>
+        </Paper>
+      )}
 
-                        <Table.Td ta="center">
-                          <ColorCopyButton color={color} />
-                        </Table.Td>
+      <Group mt="lg" justify="center">
+        <Group justify="space-between">
+          {palettePost.tags.map((tag) => (
+            <Badge size="lg" color="gray" key={crypto.randomUUID()}>
+              {tag}
+            </Badge>
+          ))}
+        </Group>
+      </Group>
+    </AppCloseContainer>
+  );
+}
 
-                        <Table.Td ta="center">
-                          <ColorCopyButton color={hexToRgb(color)} />
-                        </Table.Td>
-                      </Table.Tr>
-                    ))}
-                  </Table.Tbody>
-                </Table>
-              </Box>
-            </Flex>
+function PalettePostSkeleton() {
+  return (
+    <AppCloseContainer>
+      <Skeleton height={20} />
 
-            {palettePost.description && (
-              <Paper p="lg" shadow="xs" withBorder>
-                <Text>{palettePost.description}</Text>
-              </Paper>
-            )}
+      <Flex
+        mt="xl"
+        direction={{ base: 'column', md: 'row' }}
+        gap={{ base: 'xs', md: 'md' }}
+      >
+        <Skeleton height={400} />
+        <Skeleton height={400} />
+      </Flex>
 
-            <Group mt="lg" justify="center">
-              <Group justify="space-between">
-                {palettePost.tags.map((tag) => (
-                  <Badge size="lg" color="gray" key={crypto.randomUUID()}>
-                    {tag}
-                  </Badge>
-                ))}
-              </Group>
-            </Group>
-          </>
-        ) : (
-          <>
-            <Flex justify="space-between">
-              <Skeleton w={500} height={35} />
+      <Skeleton mt="xl" height={125} />
 
-              <Tooltip label="Close">
-                <ActionIcon
-                  size="xl"
-                  color="gray"
-                  variant="subtle"
-                  aria-label="close"
-                  onClick={() => {
-                    if (location.key === 'default') {
-                      navigate('/', { replace: true });
-                    } else {
-                      navigate(-1);
-                    }
-                  }}
-                >
-                  <TbX fontSize="1.75rem" />
-                </ActionIcon>
-              </Tooltip>
-            </Flex>
-
-            <Skeleton height={20} />
-
-            <Flex
-              mt="xl"
-              direction={{ base: 'column', md: 'row' }}
-              gap={{ base: 'xs', md: 'md' }}
-            >
-              <Skeleton height={400} />
-              <Skeleton height={400} />
-            </Flex>
-
-            <Skeleton mt="xl" height={125} />
-
-            <Flex mt="lg" mx="auto" maw={400} gap="lg">
-              <Skeleton height={25} />
-              <Skeleton height={25} />
-              <Skeleton height={25} />
-            </Flex>
-          </>
-        )}
-      </Container>
-    </AppContainer>
+      <Flex mt="lg" mx="auto" maw={400} gap="lg">
+        <Skeleton height={25} />
+        <Skeleton height={25} />
+        <Skeleton height={25} />
+      </Flex>
+    </AppCloseContainer>
   );
 }
 
