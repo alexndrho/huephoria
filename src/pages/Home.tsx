@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getCountFromServer } from 'firebase/firestore';
 import { formatDistanceToNow } from 'date-fns';
-import AppContainer from '../components/AppContainer';
+import AppContainer from '../layouts/AppContainer';
 import PaletteBar from '../components/PaletteBar';
 import LikeButton from '../components/LikeButton';
 import { auth, palettesCollectionRef } from '../config/firebase';

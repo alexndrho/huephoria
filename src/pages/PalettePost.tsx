@@ -17,7 +17,7 @@ import { useEffect, useState } from 'react';
 import { useDebouncedCallback, useDisclosure } from '@mantine/hooks';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
-import AppContainer from '../components/AppContainer';
+import AppContainer from '../layouts/AppContainer';
 import PaletteBar from '../components/PaletteBar';
 import LikeButton from '../components/LikeButton';
 import NotFoundWithContainer from './NotFoundWithContainer';

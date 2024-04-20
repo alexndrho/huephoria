@@ -15,7 +15,7 @@ import { signOut } from 'firebase/auth';
 import { Link, useLocation } from 'react-router-dom';
 import { auth } from '../config/firebase';
 import useAuth from '../hooks/useAuth';
-import NavLinkIcon from './NavLinkIcon';
+import NavLinkIcon from '../components/NavLinkIcon';
 import classes from '../styles/AppContainer.module.css';
 import { PiHouse, PiHouseFill } from 'react-icons/pi';
 import { TbLogout, TbSettings } from 'react-icons/tb';

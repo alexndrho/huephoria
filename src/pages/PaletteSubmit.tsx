@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from '@mantine/form';
 import { useNavigate } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
-import CloseContainer from '../components/CloseContainer';
+import CloseContainer from '../layouts/CloseContainer';
 import PaletteBarEdit from '../components/PaletteBarEdit';
 import { submitPalettePost } from '../services/palettePost';
 import { auth } from '../config/firebase';

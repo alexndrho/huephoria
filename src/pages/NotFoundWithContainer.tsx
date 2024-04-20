@@ -8,7 +8,7 @@ import {
   Title,
 } from '@mantine/core';
 import { Link } from 'react-router-dom';
-import AppContainer from '../components/AppContainer';
+import AppContainer from '../layouts/AppContainer';
 
 function NotFoundWithContainer() {
   return (

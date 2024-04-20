@@ -26,7 +26,7 @@ import { useForm } from '@mantine/form';
 import { FirebaseError } from 'firebase/app';
 import { deleteObject, ref } from 'firebase/storage';
 import useAuth from '../hooks/useAuth';
-import CloseContainer from '../components/CloseContainer';
+import CloseContainer from '../layouts/CloseContainer';
 import EmailVerificationPaper from '../components/EmailVerificationPaper';
 import ChangeAvatarModal from '../components/ChangeAvatarModal';
 import ChangePasswordModal from '../components/ChangePasswordModal';
