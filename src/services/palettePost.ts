@@ -10,10 +10,10 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  setDoc,
   startAfter,
-  where,
 } from 'firebase/firestore';
-import { getUsername } from './user';
+import { getUser } from './user';
 import { auth, db, palettesCollectionRef } from '../config/firebase';
 import IPalettePost, {
   IPalettePostEntry,
@@ -33,12 +33,13 @@ const getPalettePost = async (id: string) => {
 
   if (!data) throw new Error('Document not found');
 
-  const author = await getUsername(data.uid);
+  const userData = await getUser(data.uid);
+  if (!userData) throw new Error('User not found');
 
   return {
     ...(data as IPalettePostEntry),
     id: docSnap.id,
-    author,
+    author: userData?.username,
     likes: await getLikesCount(id),
     userLike: await didUserLike(id),
   } satisfies IPalettePost;
@@ -55,12 +56,13 @@ const getInitialPalettePosts = async () => {
 
   const palettePosts = await Promise.all(
     querySnapshot.docs.map(async (doc) => {
-      const author = await getUsername(doc.data().uid);
+      const userData = await getUser(doc.data().uid);
+      if (!userData) throw new Error('User not found');
 
       return {
         ...(doc.data() as IPalettePostEntry),
         id: doc.id,
-        author,
+        author: userData.username,
         likes: await getLikesCount(doc.id),
         userLike: await didUserLike(doc.id),
       } satisfies IPalettePost;
@@ -82,12 +84,13 @@ const getMorePalettePosts = async (lastPost: IPalettePost) => {
 
   const palettePosts = await Promise.all(
     querySnapshot.docs.map(async (doc) => {
-      const author = await getUsername(doc.data().uid);
+      const userData = await getUser(doc.data().uid);
+      if (!userData) throw new Error('User not found');
 
       return {
         ...(doc.data() as IPalettePostEntry),
         id: doc.id,
-        author,
+        author: userData.username,
         likes: await getLikesCount(doc.id),
         userLike: await didUserLike(doc.id),
       } satisfies IPalettePost;
@@ -113,35 +116,38 @@ const submitPalettePost = async (
 };
 
 const likePalettePost = async (id: string) => {
-  const likesCollectionRef = collection(palettesCollectionRef, id, 'likes');
   const uid = auth.currentUser?.uid;
   if (!uid) throw new Error('User not found');
+  const likesCollectionRef = collection(palettesCollectionRef, id, 'likes');
 
-  const q = query(likesCollectionRef, where('uid', '==', uid), limit(1));
-  const querySnapshot = await getDocs(q);
+  const docRef = doc(likesCollectionRef, uid);
+  const snapshot = await getDoc(docRef);
 
-  if (!querySnapshot.empty) {
-    await deleteDoc(querySnapshot.docs[0].ref);
+  if (snapshot.exists()) {
+    await deleteDoc(docRef);
     return;
   }
 
-  const like = await addDoc(likesCollectionRef, {
-    uid,
-    createdAt: serverTimestamp(),
-  } satisfies IPalettePostLikeSubmit);
-
-  return like;
+  await setDoc(
+    docRef,
+    {
+      createdAt: serverTimestamp(),
+    } satisfies IPalettePostLikeSubmit,
+    {
+      merge: true,
+    }
+  );
 };
 
 const didUserLike = async (id: string) => {
-  const likesCollectionRef = collection(palettesCollectionRef, id, 'likes');
   const uid = auth.currentUser?.uid;
   if (!uid) return false;
+  const likesCollectionRef = collection(palettesCollectionRef, id, 'likes');
 
-  const q = query(likesCollectionRef, where('uid', '==', uid), limit(1));
-  const querySnapshot = await getDocs(q);
+  const docRef = doc(likesCollectionRef, uid);
+  const snapshot = await getDoc(docRef);
 
-  return !querySnapshot.empty;
+  return snapshot.exists();
 };
 
 const getLikesCount = async (id: string) => {

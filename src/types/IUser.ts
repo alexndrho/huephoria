@@ -1,5 +1,4 @@
 interface IUser {
-  uid: string;
   username: string;
 }
 

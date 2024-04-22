@@ -1,32 +1,35 @@
 import {
-  addDoc,
+  doc,
+  getDoc,
   getDocs,
   limit,
+  onSnapshot,
   query,
-  updateDoc,
+  setDoc,
   where,
 } from 'firebase/firestore';
-import { usersCollectionRef } from '../config/firebase';
+import { auth, db, usersCollectionRef } from '../config/firebase';
 import UserError from '../errors/UserError';
 import IUser from '../types/IUser';
 
-async function getUsername(uid: string): Promise<string> {
-  let username = '';
+async function getUser(uid: string): Promise<IUser | null> {
+  const docRef = doc(db, 'users', uid);
 
-  const q = query(usersCollectionRef, where('uid', '==', uid), limit(1));
+  const docSnap = await getDoc(docRef);
 
-  const querySnapshot = await getDocs(q);
-  const doc = querySnapshot.docs[0];
+  if (!docSnap.exists()) return null;
 
-  if (!doc || !doc.exists()) return username;
+  return docSnap.data() as IUser;
+}
 
-  const userData = doc.data() as IUser;
+function onUser(uid: string, callback: (user: IUser | null) => void) {
+  const docRef = doc(db, 'users', uid);
 
-  if (userData.username) {
-    username = userData.username;
-  }
+  const unsubscribe = onSnapshot(docRef, (doc) => {
+    callback(doc.data() as IUser);
+  });
 
-  return username;
+  return unsubscribe;
 }
 
 async function usernameExists(username: string): Promise<boolean> {
@@ -47,55 +50,25 @@ async function usernameExists(username: string): Promise<boolean> {
   return exists;
 }
 
-async function uidExistsWithUsername(uid: string): Promise<boolean> {
-  let exists = false;
-
-  const q = query(usersCollectionRef, where('uid', '==', uid), limit(1));
-
-  const querySnapshot = await getDocs(q);
-  const doc = querySnapshot.docs[0];
-
-  if (!doc || !doc.exists()) return exists;
-
-  const userData = doc.data() as IUser;
-
-  if (userData.username) {
-    exists = true;
-  }
-
-  return exists;
-}
-
-async function createUpdateUsername(
-  uid: string,
-  username: string
-): Promise<void> {
-  const q = query(usersCollectionRef, where('uid', '==', uid), limit(1));
+async function createUpdateUsername(username: string): Promise<void> {
+  const uid = auth.currentUser?.uid;
+  if (!uid) throw new Error('User not found');
 
   if (await usernameExists(username)) {
     throw new UserError('username-already-exists', 'Username already exists');
   }
 
-  const querySnapshot = await getDocs(q);
-  const doc = querySnapshot.docs[0];
+  const docRef = doc(db, 'users', uid);
 
-  if (!doc) {
-    await addDoc(usersCollectionRef, {
-      uid,
+  await setDoc(
+    docRef,
+    {
       username,
-    } as IUser);
-
-    return;
-  }
-
-  await updateDoc(doc.ref, {
-    username,
-  });
+    },
+    {
+      merge: true,
+    }
+  );
 }
 
-export {
-  getUsername,
-  usernameExists,
-  uidExistsWithUsername,
-  createUpdateUsername,
-};
+export { getUser, onUser, usernameExists, createUpdateUsername };

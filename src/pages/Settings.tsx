@@ -132,7 +132,7 @@ function Settings() {
       if (!user) return;
 
       if (!usernameDisabled && values.username !== userData?.username) {
-        await createUpdateUsername(user.uid, values.username);
+        await createUpdateUsername(values.username);
       }
 
       if (!emailDisabled && values.email !== user.email) {

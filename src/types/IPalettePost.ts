@@ -23,7 +23,6 @@ interface IPalettePost extends IPalettePostEntry {
 }
 
 interface IPalettePostLikeEntry {
-  uid: string;
   createdAt: firebase.firestore.Timestamp;
 }
 

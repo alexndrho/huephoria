@@ -10,7 +10,6 @@ import { useEffect, useState } from 'react';
 import { useForm } from '@mantine/form';
 import useAuth from '../hooks/useAuth';
 import { createUpdateUsername } from '../services/user';
-import { auth } from '../config/firebase';
 import UserError from '../errors/UserError';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,13 +17,13 @@ function CreateUsername() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
-  const { userData } = useAuth();
+  const { user } = useAuth();
 
   useEffect(() => {
-    if (!userData) {
+    if (!user) {
       navigate('/');
     }
-  }, [navigate, userData]);
+  }, [navigate, user]);
 
   const form = useForm({
     initialValues: {
@@ -39,12 +38,10 @@ function CreateUsername() {
   });
 
   const handleCreateUsername = async (values: typeof form.values) => {
-    if (!auth.currentUser) return;
-
     try {
       setIsLoading(true);
 
-      await createUpdateUsername(auth.currentUser.uid, values.username);
+      await createUpdateUsername(values.username);
       navigate('/');
 
       setIsLoading(false);
