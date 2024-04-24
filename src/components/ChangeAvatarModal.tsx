@@ -61,7 +61,7 @@ function ChangeAvatarModal({
       }
 
       // upload avatar
-      const avatarsStorageRef = ref(storage, `avatars/${user.uid}`);
+      const avatarsStorageRef = ref(storage, `users/${user.uid}/avatar`);
       const avatarInputResult = await uploadBytes(
         avatarsStorageRef,
         avatarInput

@@ -109,7 +109,7 @@ function Settings() {
       if (!user) return;
       setIsLoadingDeleteAvatar(true);
 
-      const avatarsStorageRef = ref(storage, `avatars/${user.uid}`);
+      const avatarsStorageRef = ref(storage, `users/${user.uid}/avatar`);
 
       await deleteObject(avatarsStorageRef);
 
