@@ -1,0 +1,19 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId}/avatar {
+      function isValidAvatar() {
+        return request.resource.size < 2 * 1024 * 1024
+            && request.resource.contentType in ['image/jpg', 'image/jpeg', 'image/png'];
+      }
+
+      allow read: if true;
+      allow write: if request.auth.uid == userId && isValidAvatar();
+    }
+  }
+}

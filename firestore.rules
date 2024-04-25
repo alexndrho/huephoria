@@ -1,0 +1,57 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    match /users/{userId} {
+      allow read: if true;
+      allow create: if request.auth.uid == userId;
+      allow update, delete: if request.auth.uid == userId;
+    }
+
+    match /palettes/{paletteId} {
+      function isValidHexColor(color) {
+        return color.matches("^#([0-9a-fA-F]{3}){1,2}$")
+      }
+
+      function isValidPalettePost(post) {
+        return request.auth.uid == post.uid
+          && post.title is string && post.title.size() > 0
+          && (!('description' in post) || post.description is string)
+          && post.isCreator is bool
+          && post.colors is list && post.colors.size() > 2 && post.colors.size() < 7
+          && (post.colors.size() < 1 || isValidHexColor(post.colors[0]))
+          && (post.colors.size() < 2 || isValidHexColor(post.colors[1]))
+          && (post.colors.size() < 3 || isValidHexColor(post.colors[2]))
+          && (post.colors.size() < 4 || isValidHexColor(post.colors[3]))
+          && (post.colors.size() < 5 || isValidHexColor(post.colors[4]))
+          && (post.colors.size() < 6 || isValidHexColor(post.colors[5]))
+          && (post.colors.size() < 7 || isValidHexColor(post.colors[6]))
+          && post.tags is list && post.tags.size() > 0 && post.tags.size() < 11
+          && (post.tags.size() < 1 || post.tags[0] is string && post.tags[0].size() > 0)
+          && (post.tags.size() < 2 || post.tags[1] is string && post.tags[1].size() > 0)
+          && (post.tags.size() < 3 || post.tags[2] is string && post.tags[2].size() > 0)
+          && (post.tags.size() < 4 || post.tags[3] is string && post.tags[3].size() > 0)
+          && (post.tags.size() < 5 || post.tags[4] is string && post.tags[4].size() > 0)
+          && (post.tags.size() < 6 || post.tags[5] is string && post.tags[5].size() > 0)
+          && (post.tags.size() < 7 || post.tags[6] is string && post.tags[6].size() > 0)
+          && (post.tags.size() < 8 || post.tags[7] is string && post.tags[7].size() > 0)
+          && (post.tags.size() < 9 || post.tags[8] is string && post.tags[8].size() > 0)
+          && (post.tags.size() < 10 || post.tags[9] is string && post.tags[9].size() > 0)
+          && post.createdAt is timestamp
+      }
+
+      allow read: if true;
+      allow write: if isValidPalettePost(request.resource.data);
+      allow delete: if request.auth.uid == resource.data.uid;
+    }
+
+    match /palettes/{paletteId}/likes/{likeId} {
+      allow read: if true;
+      allow create, delete: if request.auth.uid == likeId;
+    }
+  }
+}
