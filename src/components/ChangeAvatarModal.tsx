@@ -1,9 +1,9 @@
 import { Avatar, Button, FileInput, Flex, Group, Modal } from '@mantine/core';
 import { useState } from 'react';
 import { FirebaseError } from 'firebase/app';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { getDownloadURL, uploadBytes } from 'firebase/storage';
 import { updateProfile } from 'firebase/auth';
-import { auth, storage } from '../config/firebase';
+import { auth, getAvatarStorageRef } from '../config/firebase';
 import { TbPhoto } from 'react-icons/tb';
 
 interface ChangeAvatarModalProps {
@@ -61,7 +61,7 @@ function ChangeAvatarModal({
       }
 
       // upload avatar
-      const avatarsStorageRef = ref(storage, `users/${user.uid}/avatar`);
+      const avatarsStorageRef = getAvatarStorageRef(user.uid);
       const avatarInputResult = await uploadBytes(
         avatarsStorageRef,
         avatarInput

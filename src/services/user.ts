@@ -8,12 +8,12 @@ import {
   setDoc,
   where,
 } from 'firebase/firestore';
-import { auth, db, usersCollectionRef } from '../config/firebase';
+import { auth, usersCollectionRef } from '../config/firebase';
 import UserError from '../errors/UserError';
 import IUser from '../types/IUser';
 
 async function getUser(uid: string): Promise<IUser | null> {
-  const docRef = doc(db, 'users', uid);
+  const docRef = doc(usersCollectionRef, uid);
 
   const docSnap = await getDoc(docRef);
 
@@ -23,7 +23,7 @@ async function getUser(uid: string): Promise<IUser | null> {
 }
 
 function onUser(uid: string, callback: (user: IUser | null) => void) {
-  const docRef = doc(db, 'users', uid);
+  const docRef = doc(usersCollectionRef, uid);
 
   const unsubscribe = onSnapshot(docRef, (doc) => {
     callback(doc.data() as IUser);
@@ -58,7 +58,7 @@ async function createUpdateUsername(username: string): Promise<void> {
     throw new UserError('username-already-exists', 'Username already exists');
   }
 
-  const docRef = doc(db, 'users', uid);
+  const docRef = doc(usersCollectionRef, uid);
 
   await setDoc(
     docRef,

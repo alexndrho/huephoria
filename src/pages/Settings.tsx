@@ -24,14 +24,14 @@ import {
 } from 'firebase/auth';
 import { useForm } from '@mantine/form';
 import { FirebaseError } from 'firebase/app';
-import { deleteObject, ref } from 'firebase/storage';
+import { deleteObject } from 'firebase/storage';
 import useAuth from '../hooks/useAuth';
 import CloseContainer from '../layouts/CloseContainer';
 import EmailVerificationPaper from '../components/EmailVerificationPaper';
 import ChangeAvatarModal from '../components/ChangeAvatarModal';
 import ChangePasswordModal from '../components/ChangePasswordModal';
 import { createUpdateUsername } from '../services/user';
-import { auth, storage } from '../config/firebase';
+import { auth, getAvatarStorageRef } from '../config/firebase';
 import UserError from '../errors/UserError';
 import { TbEdit, TbPhoto, TbTrash } from 'react-icons/tb';
 
@@ -109,7 +109,7 @@ function Settings() {
       if (!user) return;
       setIsLoadingDeleteAvatar(true);
 
-      const avatarsStorageRef = ref(storage, `users/${user.uid}/avatar`);
+      const avatarsStorageRef = getAvatarStorageRef(user.uid);
 
       await deleteObject(avatarsStorageRef);
 

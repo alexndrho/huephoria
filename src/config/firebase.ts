@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { GoogleAuthProvider, getAuth } from 'firebase/auth';
 import { collection, getFirestore } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
+import { getStorage, ref } from 'firebase/storage';
 import { getAnalytics } from 'firebase/analytics';
 
 const firebaseConfig = {
@@ -26,6 +26,12 @@ const analytics = getAnalytics(app);
 const usersCollectionRef = collection(db, 'users');
 const palettesCollectionRef = collection(db, 'palettes');
 
+const getLikesCollectionRef = (paletteId: string) =>
+  collection(palettesCollectionRef, paletteId, 'likes');
+
+const getAvatarStorageRef = (uid: string) =>
+  ref(storage, `users/${uid}/avatar`);
+
 export {
   auth,
   googleAuthProvider,
@@ -33,5 +39,7 @@ export {
   storage,
   usersCollectionRef,
   palettesCollectionRef,
+  getLikesCollectionRef,
+  getAvatarStorageRef,
   analytics,
 };

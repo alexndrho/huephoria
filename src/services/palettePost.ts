@@ -1,6 +1,5 @@
 import {
   addDoc,
-  collection,
   deleteDoc,
   doc,
   getCountFromServer,
@@ -14,7 +13,11 @@ import {
   startAfter,
 } from 'firebase/firestore';
 import { getUser } from './user';
-import { auth, db, palettesCollectionRef } from '../config/firebase';
+import {
+  auth,
+  getLikesCollectionRef,
+  palettesCollectionRef,
+} from '../config/firebase';
 import IPalettePost, {
   IPalettePostEntry,
   IPalettePostLikeSubmit,
@@ -26,7 +29,7 @@ const POST_PER_ROW = 4;
 const POST_PER_PAGE = POST_PER_ROW * 3;
 
 const getPalettePost = async (id: string) => {
-  const docRef = doc(db, 'palettes', id);
+  const docRef = doc(palettesCollectionRef, id);
 
   const docSnap = await getDoc(docRef);
   const data = docSnap.data();
@@ -118,7 +121,7 @@ const submitPalettePost = async (
 const likePalettePost = async (id: string) => {
   const uid = auth.currentUser?.uid;
   if (!uid) throw new Error('User not found');
-  const likesCollectionRef = collection(palettesCollectionRef, id, 'likes');
+  const likesCollectionRef = getLikesCollectionRef(id);
 
   const docRef = doc(likesCollectionRef, uid);
   const snapshot = await getDoc(docRef);
@@ -142,7 +145,7 @@ const likePalettePost = async (id: string) => {
 const didUserLike = async (id: string) => {
   const uid = auth.currentUser?.uid;
   if (!uid) return false;
-  const likesCollectionRef = collection(palettesCollectionRef, id, 'likes');
+  const likesCollectionRef = getLikesCollectionRef(id);
 
   const docRef = doc(likesCollectionRef, uid);
   const snapshot = await getDoc(docRef);
@@ -151,7 +154,7 @@ const didUserLike = async (id: string) => {
 };
 
 const getLikesCount = async (id: string) => {
-  const likesCollectionRef = collection(palettesCollectionRef, id, 'likes');
+  const likesCollectionRef = getLikesCollectionRef(id);
   const snapshot = await getCountFromServer(likesCollectionRef);
 
   return snapshot.data().count;
